@@ -1,12 +1,13 @@
 {
   "name": "bayronyx-api",
   "version": "0.0.1",
-  "description": "Decentralized, solid-based api, symmetry",
+  "description": "Decentralized, solid-based api for reading and writing rdf data",
   "main": "app.js",
   "presets": [
     "@babel/preset-es2016"
   ],
   "scripts": {
+    "app" : "node app.js",
     "coverage": "nyc report --reporter=text-lcov > coverage.lcov",
     "coveralls": "nyc report --reporter=text-lcov | coveralls",
     "build": "ng build",
