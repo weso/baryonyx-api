@@ -1,6 +1,6 @@
 var appRouter = function (app) {
-  app.get("/", function(req, res) {
-    res.status(200).send("This is the bayronyx api!");
+  app.get("/testing", function(req, res) {
+    res.status(200).send("This is the baryonyx api!");
   });
 }
 

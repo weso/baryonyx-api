@@ -1,13 +1,13 @@
 {
-  "name": "bayronyx-api",
+  "name": "baryonyx-api",
   "version": "0.0.1",
-  "description": "Decentralized, solid-based api for reading and writing rdf data",
+  "description": "Decentralized, solid-based api for reading and writing in a user's solid POD",
   "main": "app.js",
   "presets": [
     "@babel/preset-es2016"
   ],
   "scripts": {
-    "app" : "node app.js",
+    "app": "node app.js",
     "coverage": "nyc report --reporter=text-lcov > coverage.lcov",
     "coveralls": "nyc report --reporter=text-lcov | coveralls",
     "build": "ng build",
@@ -24,7 +24,7 @@
     "Othmane Bakhtaoui <uo259323@uniovi.es> (https://github.com/othub)",
     "Jorge Fidalgo <UO258524@uniovi.es> (https://github.com/jorgealvarezfidalgo)"
   ],
-  "license" : "BSD-3-Clause" ,
+  "license": "BSD-3-Clause",
   "bugs": {
     "url": "https://github.com/weso/baryonyx-api/issues"
   },
@@ -88,6 +88,7 @@
     "q": "^1.5.1",
     "solid-auth-client": "^2.2.10",
     "solid-file-client": "^0.4.9",
+    "solid-server": "^5.2.2",
     "streamify-array": "^1.0.1",
     "uniqid": "^5.0.3",
     "uri-js": "^4.2.2",
