@@ -86,6 +86,7 @@
     "node-enigma": "^1.2.1",
     "prefix-ns": "^0.1.2",
     "q": "^1.5.1",
+    "solid": "^0.2.1",
     "solid-auth-client": "^2.2.10",
     "solid-file-client": "^0.4.9",
     "solid-server": "^5.2.2",
