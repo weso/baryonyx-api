@@ -1,25 +1,27 @@
 var express = require('express')
-var routes = require('./routes/routes.js')
-
-// body parser
 var bodyParser = require('body-parser')
-
+var path = require('path')
 // solid-server
 var solid = require('solid-server')
+// routes
+var routes = require('./routes/routes.js')
 
 // express application
 var app = express()
 
-app.use(bodyParser.json())
-app.use(bodyParser.urlencoded({ extended: true }))
-
 // routes
 routes(app)
 
-// running solid as express
-app.use('/', solid())
+app.use(bodyParser.json())
 
-app.listen(8080, function () {
-  console.log('Starting server on port ' + 8080)
+// running solid as express
+app.use('/', solid({
+  webid: true,
+  sslCert: path.resolve('keys/cert.pem'),
+  sslKey: path.resolve('keys/key.pem')
+}))
+
+app.listen(8443, function () {
+  console.log('Starting server on port ' + 8443)
   console.log('Solid server is now running in /')
 })
