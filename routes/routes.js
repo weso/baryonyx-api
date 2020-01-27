@@ -1,9 +1,9 @@
 module.exports = function (app, gestorS, namespaces) {
-  app.get('/symmetry', async function (req, res) {
+  app.get('/symmetry/alergias/:id', async function (req, res) {
     let predicado = 'SELECT * { ?id a <' + namespaces.schema + 'MedicalContraindication>;' +
       '<' + namespaces.schema + 'description> ?descripcion;' +
       '<' + namespaces.schema + 'name> ?nombre. }'
-    let url = 'https://takumi.solid.community/public/wo.ttl'
+    let url = 'https://takumi.solid.community/symmetry/' + req.params.id + '/Alergias.ttl' // Temporal, luego será un symmetry.localhost/...
 
     let resp = await gestorS.leer(url, predicado)
     if (resp == null) {
@@ -13,7 +13,7 @@ module.exports = function (app, gestorS, namespaces) {
       })
     } else {
       res.status(200)
-      res.send(JSON.stringify(resp))
+      res.send(resp)
     }
   })
 
