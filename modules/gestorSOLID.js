@@ -5,13 +5,15 @@ module.exports = {
   newEngine: null,
   rdfjsSource: null,
   fileClient: null,
-  init: function (app, Q, fetch, newEngine, rdfjsSource, fileClient) {
+  namespaces: null,
+  init: function (app, Q, fetch, newEngine, rdfjsSource, fileClient, namespaces) {
     this.app = app
     this.Q = Q
     this.fetch = fetch
     this.newEngine = newEngine
     this.rdfjsSource = rdfjsSource
     this.fileClient = fileClient
+    this.namespaces = namespaces
   },
   leer: async function (url, pred) {
     const deferred = this.Q.defer()
@@ -52,7 +54,6 @@ module.exports = {
     var url = webid.replace('profile/card#me', folderName)
     if ((await this.fileClient.itemExists(url))) {
       return true
-      // await this.fileClient.createFolder(url)
     } else {
       return false
     }
@@ -66,30 +67,11 @@ module.exports = {
     } else {
       console.log('folder ' + url + ' already exists !')
     }
-    // creates allergy folder if does not exist
-    if (!(await this.existFolder(folderName + '/Allergies', webid))) {
-      await this.fileClient.createFolder(url)
-      console.log('folder ' + url + ' created !')
+    if (!(await this.fileClient.itemExists(url + '/Alergias.ttl'))) {
+      await this.fileClient.createFile(url + '/Alergias.ttl', '', 'text/turtle')
+      console.log('folder Alergias.ttl created !')
     } else {
-      console.log('folder ' + url + ' already exists !')
+      console.log('folder Alergias.ttl already exists !')
     }
-  },
-  storeAllergies: async function (userDataUrl, userWebId, time, allergy) {
-    const allergyUrl = await this.generateUniqueUrlForResource(userDataUrl)
-
-    const forAllergies = `
-		<${allergyUrl}> a <${this.namespaces.schema}Message>;
-		  <${this.namespaces.schema}dateSent> <${time}>;
-		  <${this.namespaces.schema}text> <${allergy}>.`
-    try {
-      // await this.uploader.executeSPARQLUpdateForUser(userDataUrl, `INSERT DATA {${forAllergies}}`)
-    } catch (e) {
-      this.logger.error('Could not save new allergy.')
-      this.logger.error(e)
-    }
-  },
-  generateUniqueUrlForResource: async function (baseurl) {
-    let url = baseurl + '#' + this.uniqid()
-    return url
   }
 }

@@ -1,6 +1,6 @@
 module.exports = function (app, gestorS) {
   app.get('/symmetry/write/:id/:allergies', function (req, res) {
-    var url = 'https://oth2.solid.community/profile/card#me'
+    var url = 'https://oth2.solid.community/profile/card#me' // TODO: change later
     var contenido = {
       id: req.params.id,
       allergies: req.params.allergies
