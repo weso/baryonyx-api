@@ -5,15 +5,13 @@ module.exports = {
   newEngine: null,
   rdfjsSource: null,
   fileClient: null,
-  namespaces: null,
-  init: function (app, Q, fetch, newEngine, rdfjsSource, fileClient, namespaces) {
+  init: function (app, Q, fetch, newEngine, rdfjsSource, fileClient) {
     this.app = app
     this.Q = Q
     this.fetch = fetch
     this.newEngine = newEngine
     this.rdfjsSource = rdfjsSource
     this.fileClient = fileClient
-    this.namespaces = namespaces
   },
   leer: async function (url, pred) {
     const deferred = this.Q.defer()
@@ -59,44 +57,24 @@ module.exports = {
     }
   },
   writeInFolder: async function (folderName, webid, allergy, description) {
-    var url = webid.replace('profile/card#me', folderName)
+    // uniq id for the allergy
+    var uniqid = require('uniqid')
     // create id folder if it does not exist
     if (!(await this.existFolder(folderName, webid))) {
-      await this.fileClient.createFolder(url)
-      console.log('folder ' + url + ' created !')
+      await this.fileClient.createFolder(folderName)
+      console.log('folder ' + folderName + ' created !')
     } else {
-      console.log('folder ' + url + ' already exists !')
+      console.log('folder ' + folderName + ' already exists !')
     }
+    // allergies and description without spaces
+    var descriptionNoSpace = description.split(' ').join('U0020')
+    var allergyNoSpace = allergy.split(' ').join('U0020')
+    // content to be inserted in the pod
+    let content = '@prefix schem: <http://schema.org/>.\n'
+    let allergyContent = '\n<#' + uniqid() + '> a schem:MedicalContraindication;' +
+      '\nschem:description <' + descriptionNoSpace + '>;' +
+      '\nschem:name <' + allergyNoSpace + '>.'
     // create allergy folder
-    if (!(await this.fileClient.itemExists(url + '/Alergias.ttl'))) {
-      await this.fileClient.createFile(url + '/Alergias.ttl', '', 'text/turtle')
-      console.log('folder Alergias.ttl created !')
-    } else {
-      console.log('folder Alergias.ttl already exists !')
-    }
-    this.storeAllergies(webid, url + '/Alergias.ttl', allergy, description)
-  },
-  storeAllergies: async function (userUrl, alrgUrl, allergy, description) {
-    const allergyUrl = alrgUrl + '#' + allergy
-    console.log(allergyUrl)
-    console.log(userUrl)
-    let forAllergies = '<' + allergyUrl + '> a <' + this.namespaces.schema + 'MedicalContraindication>;' +
-      '<' + this.namespaces.schema + 'description> ' + description + ';' +
-      '<' + this.namespaces.schema + 'name> ' + allergy + '.'
-    try {
-      await this.executeSPARQLUpdateForUser(userUrl, `INSERT DATA {${forAllergies}}`)
-    } catch (e) {
-      console.log('Could not save new allergy.')
-      console.log(e)
-    }
-  },
-  executeSPARQLUpdateForUser: async function (url, query) {
-    return this.fetch(url, {
-      method: 'PATCH',
-      body: query,
-      headers: {
-        'Content-Type': 'application/sparql-update'
-      }
-    })
+    await this.fileClient.createFile(folderName + '/Alergias.ttl', content + allergyContent, 'text/turtle')
   }
 }

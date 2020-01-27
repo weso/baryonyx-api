@@ -23,7 +23,7 @@ const rdfjsSource = require('./modules/rdfjsSource.js')
 rdfjsSource.init(N3, Q)
 
 const gestorS = require('./modules/gestorSOLID.js')
-gestorS.init(app, Q, authCLI.fetch, newEngine, rdfjsSource, fileClient, namespaces)
+gestorS.init(app, Q, auth.fetch, newEngine, rdfjsSource, fileClient)
 
 require('./routes/writeRoutes.js')(app, gestorS)
 require('./routes/routes.js')(app, gestorS, namespaces)
