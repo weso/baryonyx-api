@@ -59,6 +59,30 @@ module.exports = {
     } else {
       console.log('folder ' + url + ' already exists !')
     }
-    await this.fileClient.createFile(allergies)
+    // creates allergy folder if does not exist
+    if (!(await this.existFolder(folderName + '/Allergies', webid))) {
+      await this.fileClient.createFolder(url)
+      console.log('folder ' + url + ' created !')
+    } else {
+      console.log('folder ' + url + ' already exists !')
+    }
+  },
+  storeAllergies: async function (userDataUrl, userWebId, time, allergy) {
+    const allergyUrl = await this.generateUniqueUrlForResource(userDataUrl)
+
+    const forAllergies = `
+		<${allergyUrl}> a <${this.namespaces.schema}Message>;
+		  <${this.namespaces.schema}dateSent> <${time}>;
+		  <${this.namespaces.schema}text> <${allergy}>.`
+    try {
+      // await this.uploader.executeSPARQLUpdateForUser(userDataUrl, `INSERT DATA {${forAllergies}}`)
+    } catch (e) {
+      this.logger.error('Could not save new allergy.')
+      this.logger.error(e)
+    }
+  },
+  generateUniqueUrlForResource: async function (baseurl) {
+    let url = baseurl + '#' + this.uniqid()
+    return url
   }
 }
