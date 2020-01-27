@@ -5,12 +5,8 @@ module.exports = function (app, gestorS) {
       id: req.params.id,
       allergies: req.params.allergies
     }
-    gestorS.existFolder('symmetry/' + contenido.id, url).then(result => {
-      if (result === true) {
-        console.log('file already exists')
-      } else {
-        console.log('file does not exist!')
-      }
+    gestorS.writeInFolder('symmetry/' + contenido.id, url, contenido.allergies).then(result => {
+      console.log(result)
     }).catch(error => {
       console.log(error)
     })

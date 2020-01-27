@@ -49,5 +49,16 @@ module.exports = {
     } else {
       return false
     }
+  },
+  writeInFolder: async function (folderName, webid, allergies) {
+    var url = webid.replace('profile/card#me', folderName)
+    // create id folder if it does not exist
+    if (!(await this.existFolder(folderName, webid))) {
+      await this.fileClient.createFolder(url)
+      console.log('folder ' + url + ' created !')
+    } else {
+      console.log('folder ' + url + ' already exists !')
+    }
+    await this.fileClient.createFile(allergies)
   }
 }
