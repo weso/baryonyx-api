@@ -58,7 +58,7 @@ module.exports = {
       return false
     }
   },
-  writeInFolder: async function (folderName, webid, allergies) {
+  writeInFolder: async function (folderName, webid, allergy, description) {
     var url = webid.replace('profile/card#me', folderName)
     // create id folder if it does not exist
     if (!(await this.existFolder(folderName, webid))) {
@@ -68,6 +68,12 @@ module.exports = {
       console.log('folder ' + url + ' already exists !')
     }
     if (!(await this.fileClient.itemExists(url + '/Alergias.ttl'))) {
+      /*
+      const forAllergies = `
+		<${url + '/Alergias.ttl'}> a <${this.namespaces.schema}MedicalContraindication>;
+		  <${this.namespaces.schema}description> <${description}>;
+		  <${this.namespaces.schema}name> <${allergy}>.`;
+		  */
       await this.fileClient.createFile(url + '/Alergias.ttl', '', 'text/turtle')
       console.log('folder Alergias.ttl created !')
     } else {
