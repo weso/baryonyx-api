@@ -1,10 +1,10 @@
 module.exports = function (app, gestorS) {
-  app.get('/symmetry/write/:id/:allergy/:description', function (req, res) {
+  app.post('/symmetry/write', function (req, res) {
     var url = 'https://oth2.solid.community/profile/card#me' // TODO: change later
     var contenido = {
-      id: req.params.id,
-      allergy: req.params.allergy,
-      description: req.params.description
+      id: req.body.id,
+      allergy: req.body.name,
+      description: req.body.description
     }
     gestorS.writeInFolder('symmetry/' + contenido.id, url, contenido.allergy, contenido.description).then(result => {
       console.log(result)
