@@ -6,7 +6,8 @@ module.exports = function (app, gestorS) {
       allergy: req.body.allergy,
       description: req.body.description
     }
-    gestorS.writeInFolder(url + 'symmetry/' + contenido.id, url, contenido.allergy, contenido.description).then(result => {
+    var path = url + 'symmetry/' + contenido.id
+    gestorS.writeInFolder(path, url, contenido.allergy, contenido.description).then(result => {
       res.status(201).send('Alergía Insertada')
     }).catch(error => {
       res.status(500).send('Alergia No Insertada\n' + error)

@@ -56,15 +56,15 @@ module.exports = {
       return false
     }
   },
-  writeInFolder: async function (folderName, webid, allergy, description) {
+  writeInFolder: async function (symmetryPathWithID, webid, allergy, description) {
     // uniq id for the allergy
     var uniqid = require('uniqid')
     // create id folder if it does not exist
-    if (!(await this.existFolder(folderName, webid))) {
-      await this.fileClient.createFolder(folderName)
-      console.log('folder ' + folderName + ' created !')
+    if (!(await this.existFolder(symmetryPathWithID, webid))) {
+      await this.fileClient.createFolder(symmetryPathWithID)
+      console.log('folder ' + symmetryPathWithID + ' created !')
     } else {
-      console.log('folder ' + folderName + ' already exists !')
+      console.log('folder ' + symmetryPathWithID + ' already exists !')
     }
     // allergies and description without spaces
     var descriptionNoSpace = description.split(' ').join('U0020')
@@ -75,6 +75,6 @@ module.exports = {
       '\nschem:description <' + descriptionNoSpace + '>;' +
       '\nschem:name <' + allergyNoSpace + '>.'
     // create allergy folder
-    await this.fileClient.createFile(folderName + '/Alergias.ttl', content + allergyContent, 'text/turtle')
+    await this.fileClient.createFile(symmetryPathWithID + '/Alergias.ttl', content + allergyContent, 'text/turtle')
   }
 }

@@ -70,3 +70,14 @@ node_modules
 reports/
 coverage/
 coverage.lcov
+
+#solid
+index.html
+.acl
+favicon.ico.acl
+robots.txt.acl
+robots.txt
+.db/
+.well-known/
+config/
+favicon.ico
