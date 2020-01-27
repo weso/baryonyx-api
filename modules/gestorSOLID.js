@@ -11,26 +11,33 @@ module.exports = {
     this.newEngine = newEngine
     this.rdfjsSource = rdfjsSource
   },
-  leer: async function (url, predicate) {
+  leer: async function (url, pred) {
     const deferred = this.Q.defer()
     const rdfjsSource = await this.rdfjsSource.fromUrl(url, this.fetch)
     if (rdfjsSource) {
       const engine = this.newEngine()
-      engine.query('SELECT ?o { <' + url + '> <' + predicate + '> ?o.}', {
+      const objects = []
+      const promises = []
+      const self = this
+      engine.query(pred, {
         sources: [{
           type: 'rdfjsSource',
           value: rdfjsSource
         }]
       })
         .then(function (result) {
-          result.bindingsStream.on('data', function (data) {
+          result.bindingsStream.on('data', async (data) => {
+            const deferred = self.Q.defer()
+            promises.push(deferred.promise)
             data = data.toObject()
-
-            deferred.resolve(data['?o'])
+            objects.push(data)
+            deferred.resolve()
           })
 
           result.bindingsStream.on('end', function () {
-            deferred.resolve(null)
+            self.Q.all(promises).then(() => {
+              deferred.resolve(objects)
+            })
           })
         })
     } else {
