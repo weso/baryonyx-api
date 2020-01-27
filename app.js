@@ -1,18 +1,25 @@
-var express = require('express')
-var bodyParser = require('body-parser')
-var path = require('path')
+const express = require('express')
+const bodyParser = require('body-parser')
+const path = require('path')
 // solid-server
-var solid = require('solid-server')
-// routes
-var routes = require('./routes/routes.js')
+const solid = require('solid-server')
+const Q = require('q')
+const N3 = require('n3')
+const auth = require('solid-auth-client')
+const newEngine = require('@comunica/actor-init-sparql-rdfjs').newEngine
 
 // express application
-var app = express()
-
-// routes
-routes(app)
+const app = express()
 
 app.use(bodyParser.json())
+
+const rdfjsSource = require('./modules/rdfjsSource.js')
+rdfjsSource.init(N3, Q)
+
+const gestorS = require('./modules/gestorSOLID.js')
+gestorS.init(app, Q, auth.fetch, newEngine, rdfjsSource)
+
+require('./routes/routes.js')(app, gestorS)
 
 // running solid as express
 app.use('/', solid({
