@@ -1,10 +1,20 @@
-module.exports = function (app, gestorS) {
-  app.get('/symmetry', function (req, res) {
-    // var criterio = {"_id": }
-    var url = ''
-    var pred = ''
+module.exports = function (app, gestorS, namespaces) {
+  app.get('/symmetry', async function (req, res) {
+    let predicado = 'SELECT * { ?id a <' + namespaces.schema + 'MedicalContraindication>;' +
+      '<' + namespaces.schema + 'description> ?descripcion;' +
+      '<' + namespaces.schema + 'name> ?nombre. }'
+    let url = 'https://takumi.solid.community/public/wo.ttl'
 
-    gestorS.leer(url, pred)
+    let resp = await gestorS.leer(url, predicado)
+    if (resp == null) {
+      res.status(500)
+      res.json({
+        error: 'se ha producido un error'
+      })
+    } else {
+      res.status(200)
+      res.send(JSON.stringify(resp))
+    }
   })
 
   app.post('/symmetry', function (req, res) {

@@ -11,6 +11,8 @@ const newEngine = require('@comunica/actor-init-sparql-rdfjs').newEngine
 const authCLI = require('solid-auth-cli')
 const FC = require('solid-file-client')
 const fileClient = new FC(authCLI)
+// namespaces
+const namespaces = require('prefix-ns').asMap()
 
 // express application
 const app = express()
@@ -23,8 +25,8 @@ rdfjsSource.init(N3, Q)
 const gestorS = require('./modules/gestorSOLID.js')
 gestorS.init(app, Q, auth.fetch, newEngine, rdfjsSource, fileClient)
 
-require('./routes/routes.js')(app, gestorS)
-require('./routes/writeRoutes.js')(app, gestorS)
+require('./routes/writeRoutes.js')(app, gestorS, namespaces)
+require('./routes/routes.js')(app, gestorS, namespaces)
 
 // running solid as express
 app.use('/', solid({
