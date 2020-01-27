@@ -4,12 +4,16 @@ module.exports = {
   fetch: null,
   newEngine: null,
   rdfjsSource: null,
-  init: function (app, Q, fetch, newEngine, rdfjsSource) {
+  fileClient: null,
+  namespaces: null,
+  init: function (app, Q, fetch, newEngine, rdfjsSource, fileClient, namespaces) {
     this.app = app
     this.Q = Q
     this.fetch = fetch
     this.newEngine = newEngine
     this.rdfjsSource = rdfjsSource
+    this.fileClient = fileClient
+    this.namespaces = namespaces
   },
   leer: async function (url, pred) {
     const deferred = this.Q.defer()
@@ -45,5 +49,29 @@ module.exports = {
     }
 
     return deferred.promise
+  },
+  existFolder: async function (folderName, webid) {
+    var url = webid.replace('profile/card#me', folderName)
+    if ((await this.fileClient.itemExists(url))) {
+      return true
+    } else {
+      return false
+    }
+  },
+  writeInFolder: async function (folderName, webid, allergies) {
+    var url = webid.replace('profile/card#me', folderName)
+    // create id folder if it does not exist
+    if (!(await this.existFolder(folderName, webid))) {
+      await this.fileClient.createFolder(url)
+      console.log('folder ' + url + ' created !')
+    } else {
+      console.log('folder ' + url + ' already exists !')
+    }
+    if (!(await this.fileClient.itemExists(url + '/Alergias.ttl'))) {
+      await this.fileClient.createFile(url + '/Alergias.ttl', '', 'text/turtle')
+      console.log('folder Alergias.ttl created !')
+    } else {
+      console.log('folder Alergias.ttl already exists !')
+    }
   }
 }
