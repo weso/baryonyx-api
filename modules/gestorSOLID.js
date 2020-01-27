@@ -67,17 +67,36 @@ module.exports = {
     } else {
       console.log('folder ' + url + ' already exists !')
     }
+    // create allergy folder
     if (!(await this.fileClient.itemExists(url + '/Alergias.ttl'))) {
-      /*
-      const forAllergies = `
-		<${url + '/Alergias.ttl'}> a <${this.namespaces.schema}MedicalContraindication>;
-		  <${this.namespaces.schema}description> <${description}>;
-		  <${this.namespaces.schema}name> <${allergy}>.`;
-		  */
       await this.fileClient.createFile(url + '/Alergias.ttl', '', 'text/turtle')
       console.log('folder Alergias.ttl created !')
     } else {
       console.log('folder Alergias.ttl already exists !')
     }
+    this.storeAllergies(webid, url + '/Alergias.ttl', allergy, description)
+  },
+  storeAllergies: async function (userUrl, alrgUrl, allergy, description) {
+    const allergyUrl = alrgUrl + '#' + allergy
+    console.log(allergyUrl)
+    console.log(userUrl)
+    let forAllergies = '<' + allergyUrl + '> a <' + this.namespaces.schema + 'MedicalContraindication>;' +
+      '<' + this.namespaces.schema + 'description> ' + description + ';' +
+      '<' + this.namespaces.schema + 'name> ' + allergy + '.'
+    try {
+      await this.executeSPARQLUpdateForUser(userUrl, `INSERT DATA {${forAllergies}}`)
+    } catch (e) {
+      console.log('Could not save new allergy.')
+      console.log(e)
+    }
+  },
+  executeSPARQLUpdateForUser: async function (url, query) {
+    return this.fetch(url, {
+      method: 'PATCH',
+      body: query,
+      headers: {
+        'Content-Type': 'application/sparql-update'
+      }
+    })
   }
 }
