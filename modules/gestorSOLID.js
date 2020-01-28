@@ -63,14 +63,19 @@ module.exports = {
     if (!(await this.existFolder(symmetryPathWithID, webid))) {
       await this.fileClient.createFolder(symmetryPathWithID)
     }
-    // allergies and description without spaces
-    var descriptionNoSpace = description.split(' ').join('U0020')
-    var allergyNoSpace = allergy.split(' ').join('U0020')
-    // content to be inserted in the pod
+    // header for allergy.ttl
     let content = '@prefix schem: <http://schema.org/>.\n'
-    let allergyContent = '\n<#' + uniqid() + '> a schem:MedicalContraindication;' +
-      '\nschem:description <' + descriptionNoSpace + '>;' +
-      '\nschem:name <' + allergyNoSpace + '>.'
+    let allergyContent = ''
+    // foreach allergy
+    for (var i = 0; i < allergy.length; i++){
+      // allergies and description without spaces
+      var descriptionNoSpace = description[i].split(' ').join('U0020')
+      var allergyNoSpace = allergy[i].split(' ').join('U0020')
+      // content to be inserted in the pod
+      allergyContent += '\n<#' + uniqid() + '> a schem:MedicalContraindication;' +
+        '\nschem:description <' + descriptionNoSpace + '>;' +
+        '\nschem:name <' + allergyNoSpace + '>.'
+    }
     // create allergy folder
     await this.fileClient.createFile(symmetryPathWithID + '/Alergias.ttl', content + allergyContent, 'text/turtle')
   },
