@@ -62,9 +62,6 @@ module.exports = {
     // create id folder if it does not exist
     if (!(await this.existFolder(symmetryPathWithID, webid))) {
       await this.fileClient.createFolder(symmetryPathWithID)
-      console.log('folder ' + symmetryPathWithID + ' created !')
-    } else {
-      console.log('folder ' + symmetryPathWithID + ' already exists !')
     }
     // allergies and description without spaces
     var descriptionNoSpace = description.split(' ').join('U0020')
@@ -76,5 +73,34 @@ module.exports = {
       '\nschem:name <' + allergyNoSpace + '>.'
     // create allergy folder
     await this.fileClient.createFile(symmetryPathWithID + '/Alergias.ttl', content + allergyContent, 'text/turtle')
+  },
+  deleteAllergyFile: async function (symmetryPathWithID, webid) {
+    var alrgyPath = symmetryPathWithID + '/Alergias.ttl'
+    // checks if folder and file exists
+    if (!(await this.existFolder(symmetryPathWithID, webid))) {
+      return false
+    } else {
+      if (!(await this.fileClient.itemExists(alrgyPath))) {
+        return false
+      } else {
+        // deleting allergy file
+        await this.fileClient.deleteFile(alrgyPath)
+        return true
+      }
+    }
+  },
+  deleteUserFolder: async function (symmetryPathWithID, webid) {
+    // checks if folder and file exists
+    if (!(await this.existFolder(symmetryPathWithID, webid))) {
+      return false
+    } else {
+      if (!(await this.fileClient.itemExists(symmetryPathWithID))) {
+        return false
+      } else {
+        // deleting user folder
+        await this.fileClient.deleteFile(symmetryPathWithID)
+        return true
+      }
+    }
   }
 }
