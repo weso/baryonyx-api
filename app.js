@@ -26,7 +26,7 @@ const gestorS = require('./modules/gestorSOLID.js')
 gestorS.init(app, Q, auth.fetch, newEngine, rdfjsSource, fileClient)
 
 require('./routes/writeRoutes.js')(app, gestorS)
-require('./routes/routes.js')(app, gestorS, namespaces)
+require('./routes/readRoutes.js')(app, gestorS, namespaces)
 
 // running solid as express
 app.use('/', solid({

@@ -16,12 +16,4 @@ module.exports = function (app, gestorS, namespaces) {
       res.send(resp)
     }
   })
-
-  app.post('/symmetry', function (req, res) {
-    var contenido = {
-      a: req.body.a,
-      b: req.body.b,
-      c: req.body.c
-    }
-  })
 }

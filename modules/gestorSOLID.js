@@ -14,6 +14,9 @@ module.exports = {
     this.fileClient = fileClient
   },
   leer: async function (url, pred) {
+    if (!(await this.existFolder(url))) {
+      await this.fileClient.createFolder(url)
+    }
     const deferred = this.Q.defer()
     const rdfjsSource = await this.rdfjsSource.fromUrl(url, this.fetch)
     if (rdfjsSource) {
@@ -48,9 +51,8 @@ module.exports = {
 
     return deferred.promise
   },
-  existFolder: async function (folderName, webid) {
-    var url = webid.replace('profile/card#me', folderName)
-    if ((await this.fileClient.itemExists(url))) {
+  existFolder: async function (folderName) {
+    if ((await this.fileClient.itemExists(folderName))) {
       return true
     } else {
       return false
@@ -60,14 +62,15 @@ module.exports = {
     // uniq id for the allergy
     var uniqid = require('uniqid')
     // create id folder if it does not exist
-    if (!(await this.existFolder(symmetryPathWithID, webid))) {
-      await this.fileClient.createFolder(symmetryPathWithID)
+    var url = webid.replace('profile/card#me', symmetryPathWithID)
+    if (!(await this.existFolder(url))) {
+      await this.fileClient.createFolder(url)
     }
     // header for allergy.ttl
     let content = '@prefix schem: <http://schema.org/>.\n'
     let allergyContent = ''
     // foreach allergy
-    for (var i = 0; i < allergy.length; i++){
+    for (var i = 0; i < allergy.length; i++) {
       // allergies and description without spaces
       var descriptionNoSpace = description[i].split(' ').join('U0020')
       var allergyNoSpace = allergy[i].split(' ').join('U0020')
@@ -82,7 +85,8 @@ module.exports = {
   deleteAllergyFile: async function (symmetryPathWithID, webid) {
     var alrgyPath = symmetryPathWithID + '/Alergias.ttl'
     // checks if folder and file exists
-    if (!(await this.existFolder(symmetryPathWithID, webid))) {
+    var url = webid.replace('profile/card#me', symmetryPathWithID)
+    if (!(await this.existFolder(url))) {
       return false
     } else {
       if (!(await this.fileClient.itemExists(alrgyPath))) {
@@ -96,7 +100,8 @@ module.exports = {
   },
   deleteUserFolder: async function (symmetryPathWithID, webid) {
     // checks if folder and file exists
-    if (!(await this.existFolder(symmetryPathWithID, webid))) {
+    var url = webid.replace('profile/card#me', symmetryPathWithID)
+    if (!(await this.existFolder(url))) {
       return false
     } else {
       if (!(await this.fileClient.itemExists(symmetryPathWithID))) {
