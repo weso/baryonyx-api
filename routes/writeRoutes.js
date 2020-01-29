@@ -1,13 +1,27 @@
-module.exports = function (app, gestorS) {
+module.exports = function (app, gestorS, namespaces) {
   app.post('/symmetry/write', function (req, res) {
-    var url = 'https://oth2.solid.community/' // TODO: change later
     var contenido = {
-      id: req.body.id,
+      idcl: req.body.idcl,
+      idal: req.body.idal,
       allergy: req.body.allergy,
       description: req.body.description
     }
-    var path = url + 'symmetry/' + contenido.id
-    gestorS.writeInFolder(path, url, contenido.allergy, contenido.description).then(result => {
+    let predicado = ''
+    let predicado2 = 'SELECT * { ?id a <' + namespaces.schema + 'MedicalContraindication>;' +
+      '<' + namespaces.schema + 'description> ?descripcion;' +
+      '<' + namespaces.schema + 'name> ?nombre. }'
+    for (var i = 0; i < contenido.allergy.length; i++) {
+      // allergies and description without spaces
+      var descriptionNoSpace = contenido.description[i].split(' ').join('U0020')
+      var allergyNoSpace = contenido.allergy[i].split(' ').join('U0020')
+      // content to be inserted in the pod
+      predicado += '\n<#' + contenido.idal[i] + '> a <' + namespaces.schema + 'MedicalContraindication>;' +
+        '<' + namespaces.schema + 'description> <' + descriptionNoSpace + '>;' +
+        '<' + namespaces.schema + 'name> <' + allergyNoSpace + '>.'
+    }
+    let path = 'https://takumi.solid.community/symmetry/' + req.body.idcl // Cambiar por NSS
+    // gestorS.writeInFolder(path, contenido).then(result => {
+    gestorS.writeInFolder2(path, contenido, predicado, predicado2).then(result => {
       res.status(201).json({
         message: 'Alergia Insertada'
       })

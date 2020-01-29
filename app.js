@@ -25,7 +25,7 @@ rdfjsSource.init(N3, Q)
 const gestorS = require('./modules/gestorSOLID.js')
 gestorS.init(app, Q, auth.fetch, newEngine, rdfjsSource, fileClient)
 
-require('./routes/writeRoutes.js')(app, gestorS)
+require('./routes/writeRoutes.js')(app, gestorS, namespaces)
 require('./routes/readRoutes.js')(app, gestorS, namespaces)
 
 // running solid as express

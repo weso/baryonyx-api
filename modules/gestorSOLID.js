@@ -14,11 +14,13 @@ module.exports = {
     this.fileClient = fileClient
   },
   leer: async function (url, pred) {
+    let path = url + '/Alergias.ttl'
     if (!(await this.existFolder(url))) {
       await this.fileClient.createFolder(url)
+      await this.fileClient.createFile(path, '', 'text/turtle')
     }
     const deferred = this.Q.defer()
-    const rdfjsSource = await this.rdfjsSource.fromUrl(url, this.fetch)
+    const rdfjsSource = await this.rdfjsSource.fromUrl(path, this.fetch)
     if (rdfjsSource) {
       const engine = this.newEngine()
       const objects = []
@@ -58,11 +60,8 @@ module.exports = {
       return false
     }
   },
-  writeInFolder: async function (symmetryPathWithID, webid, allergy, description) {
-    // uniq id for the allergy
-    var uniqid = require('uniqid')
+  writeInFolder: async function (url, contenido, namespaces) {
     // create id folder if it does not exist
-    var url = webid.replace('profile/card#me', symmetryPathWithID)
     if (!(await this.existFolder(url))) {
       await this.fileClient.createFolder(url)
     }
@@ -70,17 +69,52 @@ module.exports = {
     let content = '@prefix schem: <http://schema.org/>.\n'
     let allergyContent = ''
     // foreach allergy
-    for (var i = 0; i < allergy.length; i++) {
+    for (var i = 0; i < contenido.allergy.length; i++) {
       // allergies and description without spaces
-      var descriptionNoSpace = description[i].split(' ').join('U0020')
-      var allergyNoSpace = allergy[i].split(' ').join('U0020')
+      var descriptionNoSpace = contenido.description[i].split(' ').join('U0020')
+      var allergyNoSpace = contenido.allergy[i].split(' ').join('U0020')
       // content to be inserted in the pod
-      allergyContent += '\n<#' + uniqid() + '> a schem:MedicalContraindication;' +
+      allergyContent += '\n<#' + contenido.idal[i] + '> a schem:MedicalContraindication;' +
         '\nschem:description <' + descriptionNoSpace + '>;' +
         '\nschem:name <' + allergyNoSpace + '>.'
     }
-    // create allergy folder
-    await this.fileClient.createFile(symmetryPathWithID + '/Alergias.ttl', content + allergyContent, 'text/turtle')
+    // create allergy file
+    await this.fileClient.createFile(url + '/Alergias.ttl', content + allergyContent, 'text/turtle')
+  },
+  writeInFolder2: async function (url, contenido, predicadoins, predicadobusq) {
+    let path = url + '/Alergias.ttl'
+    // create id folder if it does not exist
+    if (!(await this.existFolder(url))) {
+      await this.fileClient.createFolder(url)
+      await this.fileClient.createFile(path, '', 'text/turtle')
+    }
+    // create allergy file
+    for (var i = 0; i < contenido.allergy.length; i++) {
+      let resp = await this.leer(url, predicadobusq)
+      let nombre, desc
+      for (var j = 0; j < resp.length; j++) {
+        if (resp[j]['?id'].id.split('Alergias.ttl#')[1] === contenido.idal[i]) {
+          nombre = resp[j]['?nombre'].value.split('/')[5]
+          desc = resp[j]['?descripcion'].value.split('/')[5]
+          break
+        }
+      }
+
+      await this.executeSPARQLUpdate(path, 'DELETE DATA { <#' + contenido.idal[i] +
+        '> a <http://schema.org/MedicalContraindication>;' +
+        '<http://schema.org/description> <' + desc + '>;' +
+        '<http://schema.org/name> <' + nombre + '>.}')
+    }
+    await this.executeSPARQLUpdate(path, 'INSERT DATA {' + predicadoins + '}')
+  },
+  executeSPARQLUpdate: function (url, query) {
+    return this.fetch(url, {
+      method: 'PATCH',
+      body: query,
+      headers: {
+        'Content-Type': 'application/sparql-update'
+      }
+    })
   },
   deleteAllergyFile: async function (symmetryPathWithID, webid) {
     var alrgyPath = symmetryPathWithID + '/Alergias.ttl'
