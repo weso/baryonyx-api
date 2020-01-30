@@ -8,7 +8,7 @@
   ],
   "scripts": {
     "app": "node app.js",
-    "test": "jest",
+    "test": "jest --force-exit",
     "coverage": "nyc report --reporter=text-lcov > coverage.lcov",
     "coveralls": "nyc report --reporter=text-lcov | coveralls",
     "travisRepo": "./test/travisRepo.sh",
