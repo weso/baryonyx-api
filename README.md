@@ -4,7 +4,13 @@ SOLID POD's integration with Symmetry - API repository
 ## To run the application
 Execute the following line in a cmd :
 ```
-    node app.js
+    npm app
+```
+
+## To run the tests
+Execute the following line in a cmd :
+```
+    npm test
 ```
 
 ## What does our API offer ?
@@ -32,4 +38,3 @@ using an HTTP POST with the following route :
 ```
     /symmetry/user/delete
 ```
-

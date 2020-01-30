@@ -19,7 +19,7 @@ module.exports = function (app, gestorS, namespaces) {
         '<' + namespaces.schema + 'description> <' + descriptionNoSpace + '>;' +
         '<' + namespaces.schema + 'name> <' + allergyNoSpace + '>.'
     }
-    let path = 'https://takumi.solid.community/symmetry/' + req.body.idcl // Cambiar por NSS
+    let path = 'https://oth2.solid.community/symmetry/' + req.body.idcl // Cambiar por NSS
     // gestorS.writeInFolder(path, contenido).then(result => {
     gestorS.writeInFolder2(path, contenido, predicado, predicado2).then(result => {
       res.status(201).json({
@@ -38,7 +38,7 @@ module.exports = function (app, gestorS, namespaces) {
     var path = url + 'symmetry/' + id
     gestorS.deleteAllergyFile(path, url).then(result => {
       if (result === true) {
-        res.status(201).json({
+        res.status(200).json({
           message: 'Fichero de Alergias Borrado!'
         })
       } else {
@@ -55,7 +55,7 @@ module.exports = function (app, gestorS, namespaces) {
     var path = url + 'symmetry/' + id
     gestorS.deleteUserFolder(path, url).then(result => {
       if (result === true) {
-        res.status(201).json({
+        res.status(200).json({
           message: 'Carpeta del usuario ' + id + ' Borrada!'
         })
       } else {
