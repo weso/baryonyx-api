@@ -39,3 +39,5 @@ app.listen(8443, function () {
   console.log('Starting server on port ' + 8443)
   console.log('Solid server is now running in /')
 })
+
+module.exports = app;
