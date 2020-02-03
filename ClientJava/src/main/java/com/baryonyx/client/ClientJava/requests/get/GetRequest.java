@@ -15,7 +15,8 @@ public class GetRequest {
 	private final static String BASE_URL = "http://localhost:8443";
 
 	public static void main(String[] args) throws IOException, InterruptedException {
-		sendGET("66GG");
+		String clientID = "66GG";
+		sendGET(clientID);
 	}
 
 	public static void sendGET(String userID) throws IOException, InterruptedException {
