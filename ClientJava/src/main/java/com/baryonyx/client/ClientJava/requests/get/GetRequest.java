@@ -1,4 +1,4 @@
-package com.baryonyx.client.ClientJava;
+package com.baryonyx.client.ClientJava.requests.get;
 
 import java.io.IOException;
 import java.net.URI;
@@ -13,15 +13,14 @@ public class GetRequest {
 
 	private final static HttpClient httpClient = HttpClient.newBuilder().version(HttpClient.Version.HTTP_2).build();
 	private final static String BASE_URL = "http://localhost:8443";
-	
+
 	public static void main(String[] args) throws IOException, InterruptedException {
 		sendGET("66GG");
 	}
 
 	public static void sendGET(String userID) throws IOException, InterruptedException {
 
-		HttpRequest request = HttpRequest.newBuilder().GET()
-				.uri(URI.create(BASE_URL + "/symmetry/alergias/" + userID))
+		HttpRequest request = HttpRequest.newBuilder().GET().uri(URI.create(BASE_URL + "/symmetry/alergias/" + userID))
 				.setHeader("User-Agent", "Get Allergies from API") // add request header
 				.build();
 
@@ -39,7 +38,6 @@ public class GetRequest {
 
 		// print response body
 		System.out.println(response.body());
-
 	}
 
 }
