@@ -1,27 +1,32 @@
 module.exports = function (app, gestorS, namespaces) {
   app.post('/symmetry/write', function (req, res) {
     var contenido = {
-      idcl: req.body.idcl,
-      idal: req.body.idal,
-      allergy: req.body.allergy,
-      description: req.body.description
+      idcl: req.body.idcl, // ID paciente
+      idal: req.body.idal, // ID alergia
+      idpr: req.body.idpr, // ID propietario
+      name: req.body.name, // Nombre alergia
+      description: req.body.description // Observaciones
     }
+
     let predicado = ''
     let predicado2 = 'SELECT * { ?id a <' + namespaces.schema + 'MedicalContraindication>;' +
       '<' + namespaces.schema + 'description> ?descripcion;' +
+      '<' + namespaces.schema + 'identifier> ?propietario;' +
       '<' + namespaces.schema + 'name> ?nombre. }'
-    for (var i = 0; i < contenido.allergy.length; i++) {
+
+    for (let i = 0; i < contenido.name.length; i++) {
       // allergies and description without spaces
-      var descriptionNoSpace = contenido.description[i].split(' ').join('U0020')
-      var allergyNoSpace = contenido.allergy[i].split(' ').join('U0020')
+      let descriptionNoSpace = contenido.description[i].split(' ').join('U0020')
+      let nameNoSpace = contenido.name[i].split(' ').join('U0020')
       // content to be inserted in the pod
       predicado += '\n<#' + contenido.idal[i] + '> a <' + namespaces.schema + 'MedicalContraindication>;' +
         '<' + namespaces.schema + 'description> <' + descriptionNoSpace + '>;' +
-        '<' + namespaces.schema + 'name> <' + allergyNoSpace + '>.'
+        '<' + namespaces.schema + 'identifier> <' + contenido.idpr[i] + '>;' +
+        '<' + namespaces.schema + 'name> <' + nameNoSpace + '>.'
     }
     let path = 'https://oth2.solid.community/symmetry/' + req.body.idcl // Cambiar por NSS
-    // gestorS.writeInFolder(path, contenido).then(result => {
-    gestorS.writeInFolder2(path, contenido, predicado, predicado2).then(result => {
+
+    gestorS.writeInFolder(path, contenido, predicado, predicado2).then(result => {
       res.status(201).json({
         message: 'Alergia Insertada'
       })

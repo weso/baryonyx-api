@@ -2,6 +2,7 @@ module.exports = function (app, gestorS, namespaces) {
   app.get('/symmetry/alergias/:id', async function (req, res) {
     let predicado = 'SELECT * { ?id a <' + namespaces.schema + 'MedicalContraindication>;' +
       '<' + namespaces.schema + 'description> ?descripcion;' +
+      '<' + namespaces.schema + 'identifier> ?propietario;' +
       '<' + namespaces.schema + 'name> ?nombre. }'
     let url = 'https://oth2.solid.community/symmetry/' + req.params.id // Temporal, luego será un symmetry.localhost/...
 
