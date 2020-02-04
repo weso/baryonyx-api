@@ -16,12 +16,13 @@ public class PostRequest {
 
 	public static void main(String[] args) throws IOException, InterruptedException {
 		String[] allergiesID = { "1", "2", "3" };
+		String[] propietarios = { "1738456", "34643636", "8673935" };
 		String[] names = { "name1", "name2", "name3" };
 		String[] descriptions = { "descr1", "descr2", "descr3" };
 		String clientID = "66GG";
-		createAllergyFor(clientID, allergiesID, names, descriptions);
-		deleteAllergyFileFor(clientID); //Para pruebas, borrar
-		deleteUserFolder(clientID);	//Para pruebas, borrar
+		createAllergyFor(clientID, allergiesID, propietarios, names, descriptions);
+		deleteAllergyFileFor(clientID); // Para pruebas, borrar
+		deleteUserFolder(clientID); // Para pruebas, borrar
 	}
 
 	/**
@@ -35,14 +36,15 @@ public class PostRequest {
 	 * @throws InterruptedException
 	 */
 	@SuppressWarnings("unchecked")
-	public static void createAllergyFor(String clientID, String[] allergyIDs, String[] allergiesName,
-			String[] allergiesDescription) throws IOException, InterruptedException {
+	public static void createAllergyFor(String clientID, String[] allergyIDs, String[] propietarios,
+			String[] allergiesName, String[] allergiesDescription) throws IOException, InterruptedException {
 
 		JSONObject json = new JSONObject();
 
 		json.put("idcl", clientID);
 		appendJSONArray(json, "idal", allergyIDs);
-		appendJSONArray(json, "allergy", allergiesName);
+		appendJSONArray(json, "idpr", propietarios);
+		appendJSONArray(json, "name", allergiesName);
 		appendJSONArray(json, "description", allergiesDescription);
 
 		// add json header
