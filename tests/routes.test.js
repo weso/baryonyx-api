@@ -4,6 +4,61 @@ jest.useFakeTimers()
 jest.setTimeout(30000)
 
 describe('Testing the API', () => {
+
+  it('Adding one allergy to a new User : POST', async (done) => {
+    const res = await request(app)
+      .post('/symmetry/write')
+      .send({
+        "idcl": "45678G",
+        "idal": ["1"],
+        "idpr": ["1738456"],
+        "name": ["Alergia 1"],
+        "description": ["Va a morir"]
+      })
+    expect(res.statusCode).toEqual(201)
+    expect(res.body).toHaveProperty('message')
+    expect(res.body.message).toEqual('Alergia Insertada')
+    done()
+  })
+
+  it('Reading the allergy inserted : GET', async (done) => {
+    const res = await request(app)
+      .get('/symmetry/alergias/45678G')
+    expect(res.statusCode).toEqual(200)
+    expect(res.body).not.toHaveProperty('error')
+    const id = '45678G'
+    expect(res.type).toEqual('application/json')
+    expect(res.body[0]['?descripcion'].value).toContain('https://oth2.solid.community/symmetry/45678G/VaU0020aU0020morir')
+    expect(res.body[0]['?id'].value).toContain('https://oth2.solid.community/symmetry/45678G/Alergias.ttl#1')
+    expect(res.body[0]['?nombre'].value).toContain('https://oth2.solid.community/symmetry/45678G/AlergiaU00201')
+    expect(res.body[0]['?propietario'].value).toContain('https://oth2.solid.community/symmetry/45678G/1738456')
+    done()
+  })
+
+  it('Deleting the allergy user file created by POST', async (done) => {
+    const res = await request(app)
+      .post('/symmetry/delete')
+      .send({
+        "id": "45678G"
+      })
+    expect(res.statusCode).toEqual(200)
+    expect(res.body).toHaveProperty('message')
+    expect(res.body.message).toEqual('Fichero de Alergias Borrado!')
+    done()
+  })
+
+  it('Deleting the user folder', async (done) => {
+    const res = await request(app)
+      .post('/symmetry/user/delete')
+      .send({
+        "id": "45678G"
+      })
+    expect(res.statusCode).toEqual(200)
+    expect(res.body).toHaveProperty('message')
+    expect(res.body.message).toEqual('Carpeta del usuario 45678G Borrada!')
+    done()
+  })
+
   // empty allergies for a non existing user
   it('Empty allergies for a non existing user : GET', async (done) => {
     const res = await request(app)
@@ -101,7 +156,7 @@ describe('Testing the API', () => {
     done()
   })
 
-  it('Deleting the allergy user file', async (done) => {
+  it('Deleting the allergy user file created by GET', async (done) => {
     const res = await request(app)
       .post('/symmetry/delete')
       .send({
@@ -113,7 +168,7 @@ describe('Testing the API', () => {
     done()
   })
 
-  it('Deleting the user folder', async (done) => {
+  it('Deleting the user folder II', async (done) => {
     const res = await request(app)
       .post('/symmetry/user/delete')
       .send({
@@ -124,4 +179,5 @@ describe('Testing the API', () => {
     expect(res.body.message).toEqual('Carpeta del usuario 45678G Borrada!')
     done()
   })
+
 })
