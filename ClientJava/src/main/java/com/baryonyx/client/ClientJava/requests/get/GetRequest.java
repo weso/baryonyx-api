@@ -47,21 +47,24 @@ public class GetRequest {
 		json = (JSONArray) parser.parse(response.body());
 
 		for (int i = 0; i < json.size(); i++) {
-			String id, nombre, descripcion;
+			String id, propietarioID, nombre, descripcion;
 
 			JSONObject alergia = (JSONObject) parser.parse(json.get(i).toString());
 
 			// Extraemos los valores del JSON en forma de URI
 			id = (String) ((JSONObject) alergia.get("?id")).get("value");
+			propietarioID = (String) ((JSONObject) alergia.get("?propietario")).get("value");
 			nombre = (String) ((JSONObject) alergia.get("?nombre")).get("value");
 			descripcion = (String) ((JSONObject) alergia.get("?descripcion")).get("value");
 
 			// Extraemos los valores de las URIS
 			id = id.split("#")[1];
+			propietarioID = propietarioID.split("/")[5];
 			nombre = nombre.split("/")[5];
 			descripcion = descripcion.split("/")[5];
 
 			System.out.println(id);
+			System.out.println(propietarioID);
 			System.out.println(nombre);
 			System.out.println(descripcion);
 			// Creamos la alergia con estos datos y la metemos en un listado; la devolvemos
