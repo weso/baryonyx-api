@@ -89,6 +89,7 @@ module.exports = {
     await this.executeSPARQLUpdate(path, 'INSERT DATA {' + predicadoins + '}')
   },
   executeSPARQLUpdate: function (url, query) {
+    console.log('borrando')
     return this.fetch(url, {
       method: 'PATCH',
       body: query,
@@ -127,5 +128,33 @@ module.exports = {
         return true
       }
     }
+  },
+  updateAllergy: async function (url, contenido, predicadoins, predicadobusq) {
+    let path = url + '/Alergias.ttl'
+    // create id folder if it does not exist
+    if (!(await this.existFolder(url))) {
+      return false
+    }
+    // create allergy file
+    let resp = await this.leer(url, predicadobusq)
+    let nombre, desc, prop
+    for (var j = 0; j < resp.length; j++) {
+      if (resp[j]['?id'].id.split('Alergias.ttl#')[1] === contenido.idal) {
+        console.log('ok')
+        nombre = resp[j]['?nombre'].value.split('/')[5]
+        desc = resp[j]['?descripcion'].value.split('/')[5]
+        prop = resp[j]['?propietario'].value.split('/')[5]
+        break
+      }
+    }
+    // deleting previous allergy
+    await this.executeSPARQLUpdate(path, 'DELETE DATA { <#' + contenido.idal +
+      '> a <http://schema.org/MedicalContraindication>;' +
+      '<http://schema.org/description> <' + desc + '>;' +
+      '<http://schema.org/identifier> <' + prop + '>;' +
+      '<http://schema.org/name> <' + nombre + '>.}')
+    // adding updated allergy
+    await this.executeSPARQLUpdate(path, 'INSERT DATA {' + predicadoins + '}')
+    return true
   }
 }

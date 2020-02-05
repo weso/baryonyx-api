@@ -70,4 +70,44 @@ module.exports = function (app, gestorS, namespaces) {
       }
     })
   })
+
+  app.post('/symmetry/update', function (req, res) {
+    var contenido = {
+      idcl: req.body.idcl, // ID paciente
+      idal: req.body.idal, // ID alergia
+      idpr: req.body.idpr, // ID propietario
+      name: req.body.name, // Nombre alergia
+      description: req.body.description // Observaciones
+    }
+
+    let predicado2 = 'SELECT * { ?id a <' + namespaces.schema + 'MedicalContraindication>;' +
+      '<' + namespaces.schema + 'description> ?descripcion;' +
+      '<' + namespaces.schema + 'identifier> ?propietario;' +
+      '<' + namespaces.schema + 'name> ?nombre. }'
+
+    // allergies and description without spaces
+    let descr = contenido.description + ''
+    let nombre = contenido.name + ''
+    let descriptionNoSpace = descr.split(' ').join('U0020')
+    let nameNoSpace = nombre.split(' ').join('U0020')
+    // content to be inserted in the pod
+    let predicado = '\n<#' + contenido.idal + '> a <' + namespaces.schema + 'MedicalContraindication>;' +
+      '<' + namespaces.schema + 'description> <' + descriptionNoSpace + '>;' +
+      '<' + namespaces.schema + 'identifier> <' + contenido.idpr + '>;' +
+      '<' + namespaces.schema + 'name> <' + nameNoSpace + '>.'
+
+    let path = 'https://oth2.solid.community/symmetry/' + contenido.idcl // Cambiar por NSS
+
+    gestorS.updateAllergy(path, contenido, predicado, predicado2).then(result => {
+      if (result === true) {
+        res.status(200).json({
+          message: 'Alergia Actualizada!'
+        })
+      } else {
+        res.status(400).json({
+          error: 'Alergia NO Actualizada!'
+        })
+      }
+    })
+  })
 }
