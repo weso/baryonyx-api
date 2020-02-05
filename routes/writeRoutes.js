@@ -71,7 +71,7 @@ module.exports = function (app, gestorS, namespaces) {
     })
   })
 
-  app.post('/symmetry/update', function (req, res) {
+  app.put('/symmetry/update', function (req, res) {
     var contenido = {
       idcl: req.body.idcl, // ID paciente
       idal: req.body.idal, // ID alergia
