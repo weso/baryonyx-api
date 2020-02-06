@@ -1,5 +1,5 @@
 module.exports = function (app, gestorS, namespaces) {
-  app.get('/symmetry/alergias/:id', async function (req, res) {
+  app.get('/symmetry/allergy/:id', async function (req, res) {
     let predicado = 'SELECT * { ?id a <' + namespaces.schema + 'MedicalContraindication>;' +
       '<' + namespaces.schema + 'description> ?descripcion;' +
       '<' + namespaces.schema + 'identifier> ?propietario;' +
@@ -10,10 +10,15 @@ module.exports = function (app, gestorS, namespaces) {
     if (resp == null) {
       res.status(500)
       res.json({
-        error: 'se ha producido un error'
+        error: 'An error took place during the operation.'
       })
     } else {
-      res.status(200)
+      if (resp) {
+        res.status(200)
+      }
+      else {
+        res.status(404)
+      }
       res.send(resp)
     }
   })

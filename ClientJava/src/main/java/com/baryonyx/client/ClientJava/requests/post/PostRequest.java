@@ -21,8 +21,8 @@ public class PostRequest {
 		String[] descriptions = { "descr1", "descr2", "descr3" };
 		String clientID = "66GG";
 		createAllergyFor(clientID, allergiesID, propietarios, names, descriptions);
-		deleteAllergyFileFor(clientID); // Para pruebas, borrar
-		deleteUserFolder(clientID); // Para pruebas, borrar
+		//deleteAllergyFileFor(clientID); // Para pruebas, borrar
+		//deleteUserFolder(clientID); // Para pruebas, borrar
 	}
 
 	/**
