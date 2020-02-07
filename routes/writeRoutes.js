@@ -1,5 +1,5 @@
 module.exports = function (app, gestorS) {
-  app.post('/symmetry/allergy/write', function (req, res) {
+  app.post('/symmetry/allergy', function (req, res) {
     var contenido = {
       idcl: req.body.idcl, // ID paciente
       idal: req.body.idal, // ID alergia
@@ -27,7 +27,7 @@ module.exports = function (app, gestorS) {
     })
   })
 
-  app.put('/symmetry/allergy/update', function (req, res) {
+  app.put('/symmetry/allergy', function (req, res) {
     var contenido = {
       idcl: req.body.idcl, // ID paciente
       idal: req.body.idal[0], // ID alergia

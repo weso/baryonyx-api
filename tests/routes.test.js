@@ -1,6 +1,6 @@
 const request = require('supertest')
 const app = require('../app')
-const url = 'https://oth2.solid.community/symmetry/45678G/'
+const url = 'https://oth2.solid.community/symmetry/456789/'
 jest.useFakeTimers()
 jest.setTimeout(30000)
 
@@ -8,9 +8,9 @@ describe('Testing the API', () => {
 
   it('Adding one allergy to a new User : POST', async (done) => {
     const res = await request(app)
-      .post('/symmetry/allergy/write')
+      .post('/symmetry/allergy')
       .send({
-        "idcl": "45678G",
+        "idcl": "456789",
         "idal": ["1"],
         "idpr": ["1738456"],
         "name": ["Alergia 1"],
@@ -18,16 +18,16 @@ describe('Testing the API', () => {
       })
     expect(res.statusCode).toEqual(201)
     expect(res.body).toHaveProperty('message')
-    expect(res.body.message).toEqual('No user was found with ID 45678G. Therefore, a folder was created for him. The allergy or allergies were successfully inserted.')
+    expect(res.body.message).toEqual('No user was found with ID 456789. Therefore, a folder was created for him. The allergy or allergies were successfully inserted.')
     done()
   })
 
   it('Reading the allergy inserted : GET', async (done) => {
     const res = await request(app)
-      .get('/symmetry/allergy/45678G')
+      .get('/symmetry/allergy/456789')
     expect(res.statusCode).toEqual(200)
     expect(res.body).not.toHaveProperty('error')
-    const id = '45678G'
+    const id = '456789'
     expect(res.type).toEqual('application/json')
     expect(res.body[0]['?descripcion'].value).toContain(url + 'VaU0020aU0020morir')
     expect(res.body[0]['?id'].value).toContain(url + 'Alergias.ttl#1')
@@ -40,7 +40,7 @@ describe('Testing the API', () => {
     const res = await request(app)
       .delete('/symmetry/file/allergy')
       .send({
-        "id": "45678G"
+        "id": "456789"
       })
     expect(res.statusCode).toEqual(200)
     expect(res.body).toHaveProperty('message')
@@ -52,18 +52,18 @@ describe('Testing the API', () => {
     const res = await request(app)
       .delete('/symmetry/user')
       .send({
-        "id": "45678G"
+        "id": "456789"
       })
     expect(res.statusCode).toEqual(200)
     expect(res.body).toHaveProperty('message')
-    expect(res.body.message).toEqual('User 45678G folder has been deleted.')
+    expect(res.body.message).toEqual('User 456789 folder has been deleted.')
     done()
   })
 
   // empty allergies for a non existing user
   it('Empty allergies for a non existing user : GET', async (done) => {
     const res = await request(app)
-      .get('/symmetry/allergy/45678G')
+      .get('/symmetry/allergy/456789')
 
     expect(res.statusCode).toEqual(404)
     //empty file
@@ -76,9 +76,9 @@ describe('Testing the API', () => {
   // creating an allergy file for ta specific user
   it('Adding new allergies to a new User : POST', async (done) => {
     const res = await request(app)
-      .post('/symmetry/allergy/write')
+      .post('/symmetry/allergy')
       .send({
-        "idcl": "45678G",
+        "idcl": "456789",
         "idal": ["1", "2", "3"],
         "idpr": ["1738456", "34643636", "8673935"],
         "name": ["Alergia 1", "Alergia 2", "Alergia 3"],
@@ -86,17 +86,17 @@ describe('Testing the API', () => {
       })
     expect(res.statusCode).toEqual(201)
     expect(res.body).toHaveProperty('message')
-    expect(res.body.message).toEqual('The allergy or allergies were successfully inserted on user 45678G\'s folder.')
+    expect(res.body.message).toEqual('The allergy or allergies were successfully inserted on user 456789\'s folder.')
     done()
   })
 
   // make sure the data is correct -- GET
   it('Reading the allegies inserted : GET', async (done) => {
     const res = await request(app)
-      .get('/symmetry/allergy/45678G')
+      .get('/symmetry/allergy/456789')
     expect(res.statusCode).toEqual(200)
     expect(res.body).not.toHaveProperty('error')
-    const id = '45678G'
+    const id = '456789'
     expect(res.type).toEqual('application/json')
     expect(res.body[0]['?descripcion'].value).toContain(url + 'VaU0020aU0020morir')
     expect(res.body[0]['?id'].value).toContain(url + 'Alergias.ttl#1')
@@ -116,9 +116,9 @@ describe('Testing the API', () => {
   // updating and adding new allergies to the user -- POST
   it('Updating an existent allergy', async (done) => {
     const res = await request(app)
-      .put('/symmetry/allergy/update')
+      .put('/symmetry/allergy')
       .send({
-        "idcl": "45678G",
+        "idcl": "456789",
         "idal": ["1"],
         "idpr": ["1738457"],
         "name": ["Alergia 1 CHANGED"],
@@ -126,15 +126,15 @@ describe('Testing the API', () => {
       })
     expect(res.statusCode).toEqual(201)
     expect(res.body).toHaveProperty('message')
-    expect(res.body.message).toEqual('The allergy 1 was successfully updated on user 45678G\'s folder.')
+    expect(res.body.message).toEqual('The allergy 1 was successfully updated on user 456789\'s folder.')
     done()
   })
 
   it('Updating a non existent allergy to a existent user', async (done) => {
     const res = await request(app)
-      .put('/symmetry/allergy/update')
+      .put('/symmetry/allergy')
       .send({
-        "idcl": "45678G",
+        "idcl": "456789",
         "idal": ["7"],
         "idpr": ["35456474"],
         "name": ["Peniciline"],
@@ -142,17 +142,33 @@ describe('Testing the API', () => {
       })
     expect(res.statusCode).toEqual(404)
     expect(res.body).toHaveProperty('error')
-    expect(res.body.error).toEqual('No user was found with ID 45678G or allergy with ID 7 could not be found.')
+    expect(res.body.error).toEqual('No user was found with ID 456789 or allergy with ID 7 could not be found.')
+    done()
+  })
+
+  it('Updating a non existent allergy to a non existent user', async (done) => {
+    const res = await request(app)
+      .put('/symmetry/allergy')
+      .send({
+        "idcl": "123456",
+        "idal": ["7"],
+        "idpr": ["35456474"],
+        "name": ["Peniciline"],
+        "description": ["Severe irritation"]
+      })
+    expect(res.statusCode).toEqual(404)
+    expect(res.body).toHaveProperty('error')
+    expect(res.body.error).toEqual('No user was found with ID 123456 or allergy with ID 7 could not be found.')
     done()
   })
 
   // make sure the data is updated -- GET
   it('Reading the allergies updated : GET', async (done) => {
     const res = await request(app)
-      .get('/symmetry/allergy/45678G')
+      .get('/symmetry/allergy/456789')
     expect(res.statusCode).toEqual(200)
     expect(res.body).not.toHaveProperty('error')
-    const id = '45678G'
+    const id = '456789'
     expect(res.type).toEqual('application/json')
     expect(res.body[0]['?descripcion'].value).toContain(url + 'CausesU0020multipleU0020organU0020failure')
     expect(res.body[0]['?id'].value).toContain(url + 'Alergias.ttl#1')
@@ -173,7 +189,7 @@ describe('Testing the API', () => {
     const res = await request(app)
       .delete('/symmetry/allergy')
       .send({
-        "idcl": "45678G",
+        "idcl": "456789",
         "idal": "2"
       })
     expect(res.statusCode).toEqual(200)
@@ -182,25 +198,38 @@ describe('Testing the API', () => {
     done()
   })
 
-  it('Deleting a non-existent allergy', async (done) => {
+  it('Deleting a non-existent allergy of an existent user', async (done) => {
     const res = await request(app)
       .delete('/symmetry/allergy')
       .send({
-        "idcl": "45678G",
+        "idcl": "456789",
         "idal": "8"
       })
     expect(res.statusCode).toEqual(404)
     expect(res.body).toHaveProperty('error')
-    expect(res.body.error).toEqual('Either user 45678G could not be found, or the allergy 8 could not be found.')
+    expect(res.body.error).toEqual('Either user 456789 could not be found, or the allergy 8 could not be found.')
+    done()
+  })
+
+  it('Deleting a non-existent allergy from a non existent user', async (done) => {
+    const res = await request(app)
+      .delete('/symmetry/allergy')
+      .send({
+        "idcl": "123456",
+        "idal": "8"
+      })
+    expect(res.statusCode).toEqual(404)
+    expect(res.body).toHaveProperty('error')
+    expect(res.body.error).toEqual('Either user 123456 could not be found, or the allergy 8 could not be found.')
     done()
   })
 
   it('Reading the allergies after deletion : GET', async (done) => {
     const res = await request(app)
-      .get('/symmetry/allergy/45678G')
+      .get('/symmetry/allergy/456789')
     expect(res.statusCode).toEqual(200)
     expect(res.body).not.toHaveProperty('error')
-    const id = '45678G'
+    const id = '456789'
     expect(res.type).toEqual('application/json')
     expect(res.body[0]['?descripcion'].value).toContain(url + 'CausesU0020multipleU0020organU0020failure')
     expect(res.body[0]['?id'].value).toContain(url + 'Alergias.ttl#1')
@@ -217,7 +246,7 @@ describe('Testing the API', () => {
     const res = await request(app)
       .delete('/symmetry/file/allergy')
       .send({
-        "id": "45678G"
+        "id": "456789"
       })
     expect(res.statusCode).toEqual(200)
     expect(res.body).toHaveProperty('message')
@@ -229,11 +258,35 @@ describe('Testing the API', () => {
     const res = await request(app)
       .delete('/symmetry/user')
       .send({
-        "id": "45678G"
+        "id": "456789"
       })
     expect(res.statusCode).toEqual(200)
     expect(res.body).toHaveProperty('message')
-    expect(res.body.message).toEqual('User 45678G folder has been deleted.')
+    expect(res.body.message).toEqual('User 456789 folder has been deleted.')
+    done()
+  })
+
+  it('Deleting a non existent allergy file', async (done) => {
+    const res = await request(app)
+      .delete('/symmetry/file/allergy')
+      .send({
+        "id": "456789"
+      })
+    expect(res.statusCode).toEqual(404)
+    expect(res.body).toHaveProperty('error')
+    expect(res.body.error).toEqual('The Allergy file does not exist or could not be found.')
+    done()
+  })
+
+  it('Deleting a non existent user folder', async (done) => {
+    const res = await request(app)
+      .delete('/symmetry/user')
+      .send({
+        "id": "456789"
+      })
+    expect(res.statusCode).toEqual(404)
+    expect(res.body).toHaveProperty('error')
+    expect(res.body.error).toEqual('User 456789 folder does not exist or could not be found.')
     done()
   })
 
