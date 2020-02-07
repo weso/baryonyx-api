@@ -46,7 +46,7 @@ public class PutRequest {
 
 		// add json header
 		HttpRequest request = HttpRequest.newBuilder().PUT(HttpRequest.BodyPublishers.ofString(json.toJSONString()))
-				.uri(URI.create(BASE_URL + "/symmetry/update"))
+				.uri(URI.create(BASE_URL + "/symmetry/allergy"))
 				.setHeader("User-Agent", "PUT update Allergy for user from API") // header
 				.header("Content-Type", "application/json").build();
 

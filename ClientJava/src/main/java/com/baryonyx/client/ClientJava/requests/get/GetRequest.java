@@ -25,9 +25,8 @@ public class GetRequest {
 	}
 
 	public static void sendGET(String userID) throws IOException, InterruptedException, ParseException {
-
-		HttpRequest request = HttpRequest.newBuilder().GET().uri(URI.create(BASE_URL + "/symmetry/alergias/" + userID))
-				.setHeader("User-Agent", "Get Allergies from API") // add request header
+		HttpRequest request = HttpRequest.newBuilder().GET().uri(URI.create(BASE_URL + "/symmetry/allergy/" + userID))
+				.setHeader("User-Agent", "Get Allergies for a user from API") // add request header
 				.build();
 
 		HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());

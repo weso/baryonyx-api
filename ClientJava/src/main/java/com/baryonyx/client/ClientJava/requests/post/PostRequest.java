@@ -21,8 +21,6 @@ public class PostRequest {
 		String[] descriptions = { "descr1", "descr2", "descr3" };
 		String clientID = "66GG";
 		createAllergyFor(clientID, allergiesID, propietarios, names, descriptions);
-		//deleteAllergyFileFor(clientID); // Para pruebas, borrar
-		//deleteUserFolder(clientID); // Para pruebas, borrar
 	}
 
 	/**
@@ -49,8 +47,8 @@ public class PostRequest {
 
 		// add json header
 		HttpRequest request = HttpRequest.newBuilder().POST(HttpRequest.BodyPublishers.ofString(json.toJSONString()))
-				.uri(URI.create(BASE_URL + "/symmetry/write"))
-				.setHeader("User-Agent", "POST create Allergy for user from API") // header
+				.uri(URI.create(BASE_URL + "/symmetry/allergy"))
+				.setHeader("User-Agent", "POST create Allergy folder for user from API") // header
 				.header("Content-Type", "application/json").build();
 
 		HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
@@ -78,63 +76,6 @@ public class PostRequest {
 		}
 		allergy.put(param, elements);
 		return allergy;
-	}
-
-	/**
-	 * deletes the allergy file from the user's folder
-	 * 
-	 * @param clientID the client's ID
-	 * @throws IOException
-	 * @throws InterruptedException
-	 */
-	@SuppressWarnings("unchecked")
-	public static void deleteAllergyFileFor(String clientID) throws IOException, InterruptedException {
-		JSONObject json = new JSONObject();
-
-		json.put("id", clientID);
-
-		// add json header
-		HttpRequest request = HttpRequest.newBuilder().POST(HttpRequest.BodyPublishers.ofString(json.toJSONString()))
-				.uri(URI.create(BASE_URL + "/symmetry/delete"))
-				.setHeader("User-Agent", "POST delete allergy file for user from API") // header
-				.header("Content-Type", "application/json").build();
-
-		HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
-
-		// print status code
-		System.out.println(response.statusCode());
-
-		// print response body
-		System.out.println(response.body());
-	}
-
-	/**
-	 * deletes the user folder from the base symmetry folder. NOTE: it can be
-	 * deleted ONLY IF it's empty
-	 * 
-	 * @param clientID the user ID
-	 * @throws IOException
-	 * @throws InterruptedException
-	 */
-	@SuppressWarnings("unchecked")
-	public static void deleteUserFolder(String clientID) throws IOException, InterruptedException {
-		JSONObject json = new JSONObject();
-
-		json.put("id", clientID);
-
-		// add json header
-		HttpRequest request = HttpRequest.newBuilder().POST(HttpRequest.BodyPublishers.ofString(json.toJSONString()))
-				.uri(URI.create(BASE_URL + "/symmetry/user/delete"))
-				.setHeader("User-Agent", "POST delete user file from symmetry from API") // header
-				.header("Content-Type", "application/json").build();
-
-		HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
-
-		// print status code
-		System.out.println(response.statusCode());
-
-		// print response body
-		System.out.println(response.body());
 	}
 
 }
