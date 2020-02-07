@@ -97,11 +97,9 @@ module.exports = {
       }
     })
   },
-  deleteAllergyFile: async function (symmetryPathWithID, webid) {
+  deleteAllergyFile: async function (symmetryPathWithID) {
     var alrgyPath = symmetryPathWithID + '/Alergias.ttl'
-    // checks if folder and file exists
-    var url = webid.replace('profile/card#me', symmetryPathWithID)
-    if (!(await this.existFolder(url))) {
+    if (!(await this.existFolder(symmetryPathWithID))) {
       return false
     } else {
       if (!(await this.fileClient.itemExists(alrgyPath))) {
@@ -113,10 +111,9 @@ module.exports = {
       }
     }
   },
-  deleteUserFolder: async function (symmetryPathWithID, webid) {
+  deleteUserFolder: async function (symmetryPathWithID) {
     // checks if folder and file exists
-    var url = webid.replace('profile/card#me', symmetryPathWithID)
-    if (!(await this.existFolder(url))) {
+    if (!(await this.existFolder(symmetryPathWithID))) {
       return false
     } else {
       if (!(await this.fileClient.itemExists(symmetryPathWithID))) {

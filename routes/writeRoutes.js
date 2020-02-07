@@ -1,4 +1,4 @@
-module.exports = function (app, gestorS) {
+module.exports = function (app, gestorS, url) {
   app.post('/symmetry/allergy', function (req, res) {
     var contenido = {
       idcl: req.body.idcl, // ID paciente
@@ -8,7 +8,7 @@ module.exports = function (app, gestorS) {
       description: req.body.description // Observaciones
     }
 
-    let path = 'https://oth2.solid.community/symmetry/' + req.body.idcl // Cambiar por NSS
+    let path = url + req.body.idcl // Cambiar por NSS
 
     gestorS.writeInFolder(path, contenido).then(result => {
       if (result) {
@@ -36,7 +36,7 @@ module.exports = function (app, gestorS) {
       description: req.body.description[0] // Observaciones
     }
 
-    let path = 'https://oth2.solid.community/symmetry/' + contenido.idcl // Cambiar por NSS
+    let path = url + contenido.idcl // Cambiar por NSS
 
     gestorS.updateAllergy(path, contenido).then(result => {
       if (result) {

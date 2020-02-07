@@ -1,9 +1,8 @@
-module.exports = function (app, gestorS) {
+module.exports = function (app, gestorS, url) {
   app.delete('/symmetry/file/allergy', function (req, res) {
-    var url = 'https://oth2.solid.community/' // TODO: change later
     var id = req.body.id
-    var path = url + 'symmetry/' + id
-    gestorS.deleteAllergyFile(path, url).then(result => {
+    var path = url + id
+    gestorS.deleteAllergyFile(path).then(result => {
       if (result) {
         res.status(200).json({
           message: 'The Allergy file has been deleted.'
@@ -21,10 +20,9 @@ module.exports = function (app, gestorS) {
   })
 
   app.delete('/symmetry/user', function (req, res) {
-    var url = 'https://oth2.solid.community/' // TODO: change later
     var id = req.body.id
-    var path = url + 'symmetry/' + id
-    gestorS.deleteUserFolder(path, url).then(result => {
+    var path = url + id
+    gestorS.deleteUserFolder(path).then(result => {
       if (result) {
         res.status(200).json({
           message: 'User ' + id + ' folder has been deleted.'
@@ -47,7 +45,7 @@ module.exports = function (app, gestorS) {
       idal: req.body.idal // ID alergia
     }
 
-    let path = 'https://oth2.solid.community/symmetry/' + contenido.idcl // TODO: change later
+    let path = url + contenido.idcl // TODO: change later
 
     gestorS.deleteAllergy(path, contenido).then(result => {
       if (result) {

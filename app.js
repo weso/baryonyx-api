@@ -25,9 +25,11 @@ rdfjsSource.init(N3, Q)
 const gestorS = require('./modules/gestorSOLID.js')
 gestorS.init(app, Q, auth.fetch, newEngine, rdfjsSource, fileClient, namespaces)
 
-require('./routes/writeRoutes.js')(app, gestorS)
-require('./routes/deleteRoutes.js')(app, gestorS)
-require('./routes/readRoutes.js')(app, gestorS, namespaces)
+let url = 'https://oth2.solid.community/symmetry/' // Temporal, luego será un symmetry.localhost/...
+
+require('./routes/writeRoutes.js')(app, gestorS, url)
+require('./routes/deleteRoutes.js')(app, gestorS, url)
+require('./routes/readRoutes.js')(app, gestorS, namespaces, url)
 
 // running solid as express
 app.use('/', solid({
