@@ -1,6 +1,6 @@
 const request = require('supertest')
 const app = require('../app')
-const url = 'https://oth2.solid.community/symmetry/456789/'
+const url = 'https://localhost:8443/symmetry/456789/'
 jest.useFakeTimers()
 jest.setTimeout(30000)
 
@@ -38,10 +38,7 @@ describe('Testing the API', () => {
 
   it('Deleting the allergy user file created by POST', async (done) => {
     const res = await request(app)
-      .delete('/symmetry/file/allergy')
-      .send({
-        "id": "456789"
-      })
+      .delete('/symmetry/file/allergy/456789')
     expect(res.statusCode).toEqual(200)
     expect(res.body).toHaveProperty('message')
     expect(res.body.message).toEqual('The Allergy file has been deleted.')
@@ -50,10 +47,7 @@ describe('Testing the API', () => {
 
   it('Deleting the user folder', async (done) => {
     const res = await request(app)
-      .delete('/symmetry/user')
-      .send({
-        "id": "456789"
-      })
+      .delete('/symmetry/user/456789')
     expect(res.statusCode).toEqual(200)
     expect(res.body).toHaveProperty('message')
     expect(res.body.message).toEqual('User 456789 folder has been deleted.')
@@ -187,11 +181,7 @@ describe('Testing the API', () => {
 
   it('Deleting an existent allergy', async (done) => {
     const res = await request(app)
-      .delete('/symmetry/allergy')
-      .send({
-        "idcl": "456789",
-        "idal": "2"
-      })
+      .delete('/symmetry/allergy/456789/2')
     expect(res.statusCode).toEqual(200)
     expect(res.body).toHaveProperty('message')
     expect(res.body.message).toEqual('Allergy 2 has been successfully deleted.')
@@ -200,11 +190,7 @@ describe('Testing the API', () => {
 
   it('Deleting a non-existent allergy of an existent user', async (done) => {
     const res = await request(app)
-      .delete('/symmetry/allergy')
-      .send({
-        "idcl": "456789",
-        "idal": "8"
-      })
+      .delete('/symmetry/allergy/456789/8')
     expect(res.statusCode).toEqual(404)
     expect(res.body).toHaveProperty('error')
     expect(res.body.error).toEqual('Either user 456789 could not be found, or the allergy 8 could not be found.')
@@ -213,7 +199,7 @@ describe('Testing the API', () => {
 
   it('Deleting a non-existent allergy from a non existent user', async (done) => {
     const res = await request(app)
-      .delete('/symmetry/allergy')
+      .delete('/symmetry/allergy/123456/8')
       .send({
         "idcl": "123456",
         "idal": "8"
@@ -244,10 +230,7 @@ describe('Testing the API', () => {
 
   it('Deleting the allergy user file created by GET', async (done) => {
     const res = await request(app)
-      .delete('/symmetry/file/allergy')
-      .send({
-        "id": "456789"
-      })
+      .delete('/symmetry/file/allergy/456789')
     expect(res.statusCode).toEqual(200)
     expect(res.body).toHaveProperty('message')
     expect(res.body.message).toEqual('The Allergy file has been deleted.')
@@ -256,10 +239,7 @@ describe('Testing the API', () => {
 
   it('Deleting the user folder II', async (done) => {
     const res = await request(app)
-      .delete('/symmetry/user')
-      .send({
-        "id": "456789"
-      })
+      .delete('/symmetry/user/456789')
     expect(res.statusCode).toEqual(200)
     expect(res.body).toHaveProperty('message')
     expect(res.body.message).toEqual('User 456789 folder has been deleted.')
@@ -268,10 +248,7 @@ describe('Testing the API', () => {
 
   it('Deleting a non existent allergy file', async (done) => {
     const res = await request(app)
-      .delete('/symmetry/file/allergy')
-      .send({
-        "id": "456789"
-      })
+      .delete('/symmetry/file/allergy/456789')
     expect(res.statusCode).toEqual(404)
     expect(res.body).toHaveProperty('error')
     expect(res.body.error).toEqual('The Allergy file does not exist or could not be found.')
@@ -280,10 +257,7 @@ describe('Testing the API', () => {
 
   it('Deleting a non existent user folder', async (done) => {
     const res = await request(app)
-      .delete('/symmetry/user')
-      .send({
-        "id": "456789"
-      })
+      .delete('/symmetry/user/456789')
     expect(res.statusCode).toEqual(404)
     expect(res.body).toHaveProperty('error')
     expect(res.body.error).toEqual('User 456789 folder does not exist or could not be found.')

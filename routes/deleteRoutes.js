@@ -1,6 +1,6 @@
 module.exports = function (app, gestorS, url) {
-  app.delete('/symmetry/file/allergy', function (req, res) {
-    var id = req.body.id
+  app.delete('/symmetry/file/allergy/:id', function (req, res) {
+    var id = req.params.id
     var path = url + id
     gestorS.deleteAllergyFile(path).then(result => {
       if (result) {
@@ -19,8 +19,8 @@ module.exports = function (app, gestorS, url) {
     })
   })
 
-  app.delete('/symmetry/user', function (req, res) {
-    var id = req.body.id
+  app.delete('/symmetry/user/:id', function (req, res) {
+    var id = req.params.id
     var path = url + id
     gestorS.deleteUserFolder(path).then(result => {
       if (result) {
@@ -39,13 +39,13 @@ module.exports = function (app, gestorS, url) {
     })
   })
 
-  app.delete('/symmetry/allergy', function (req, res) {
+  app.delete('/symmetry/allergy/:idcl/:idal', function (req, res) {
     var contenido = {
-      idcl: req.body.idcl,
-      idal: req.body.idal // ID alergia
+      idcl: req.params.idcl,
+      idal: req.params.idal // ID alergia
     }
 
-    let path = url + contenido.idcl // TODO: change later
+    let path = url + contenido.idcl
 
     gestorS.deleteAllergy(path, contenido).then(result => {
       if (result) {

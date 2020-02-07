@@ -25,7 +25,7 @@ rdfjsSource.init(N3, Q)
 const gestorS = require('./modules/gestorSOLID.js')
 gestorS.init(app, Q, auth.fetch, newEngine, rdfjsSource, fileClient, namespaces)
 
-let url = 'https://oth2.solid.community/symmetry/' // Temporal, luego será un symmetry.localhost/...
+let url = 'https://localhost:8443/symmetry/'
 
 require('./routes/writeRoutes.js')(app, gestorS, url)
 require('./routes/deleteRoutes.js')(app, gestorS, url)
@@ -38,9 +38,8 @@ app.use('/', solid({
   sslKey: path.resolve('keys/key.pem')
 }))
 
-app.listen(8443, function () {
-  console.log('Starting server on port ' + 8443)
-  console.log('Solid server is now running in /')
+app.listen(8440, function () {
+  console.log('Starting server on port ' + 8440)
 })
 
 module.exports = app;
