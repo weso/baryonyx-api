@@ -113,10 +113,10 @@ describe('Testing the API', () => {
       .put('/symmetry/allergy')
       .send({
         "idcl": "456789",
-        "idal": ["1"],
-        "idpr": ["1738457"],
-        "name": ["Alergia 1 CHANGED"],
-        "description": ["Causes multiple organ failure."]
+        "idal": "1",
+        "idpr": "1738457",
+        "name": "Alergia 1 CHANGED",
+        "description": "Causes multiple organ failure."
       })
     expect(res.statusCode).toEqual(201)
     expect(res.body).toHaveProperty('message')
@@ -129,10 +129,10 @@ describe('Testing the API', () => {
       .put('/symmetry/allergy')
       .send({
         "idcl": "456789",
-        "idal": ["7"],
-        "idpr": ["35456474"],
-        "name": ["Peniciline"],
-        "description": ["Severe irritation"]
+        "idal": "7",
+        "idpr": "35456474",
+        "name": "Peniciline",
+        "description": "Severe irritation"
       })
     expect(res.statusCode).toEqual(404)
     expect(res.body).toHaveProperty('error')
@@ -145,10 +145,10 @@ describe('Testing the API', () => {
       .put('/symmetry/allergy')
       .send({
         "idcl": "123456",
-        "idal": ["7"],
-        "idpr": ["35456474"],
-        "name": ["Peniciline"],
-        "description": ["Severe irritation"]
+        "idal": "7",
+        "idpr": "35456474",
+        "name": "Peniciline",
+        "description": "Severe irritation"
       })
     expect(res.statusCode).toEqual(404)
     expect(res.body).toHaveProperty('error')
