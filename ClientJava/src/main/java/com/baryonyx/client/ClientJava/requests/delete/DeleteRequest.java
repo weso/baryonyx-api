@@ -9,13 +9,13 @@ import java.net.http.HttpResponse;
 public class DeleteRequest {
 
 	private static final HttpClient httpClient = HttpClient.newBuilder().version(HttpClient.Version.HTTP_2).build();
-	private final static String BASE_URL = "https://localhost:8443";
+	private final static String BASE_URL = "http://localhost:8440";
 
 	public static void main(String[] args) throws IOException, InterruptedException {
 		String clientID = "66GG";
-		String allergyID = "1";
-		deleteAllergyFileFor(clientID); // Para pruebas, borrar
-		deleteUserFolder(clientID); // Para pruebas, borrar
+		String allergyID = "3";
+		//deleteAllergyFileFor(clientID); // Para pruebas, borrar
+		//deleteUserFolder(clientID); // Para pruebas, borrar
 		deleteAllergy(clientID, allergyID); // Para pruebas, borrar
 	}
 

@@ -17,7 +17,7 @@ import org.json.simple.parser.ParseException;
 public class GetRequest {
 
 	private final static HttpClient httpClient = HttpClient.newBuilder().version(HttpClient.Version.HTTP_2).build();
-	private final static String BASE_URL = "https://localhost:8443";
+	private final static String BASE_URL = "http://localhost:8440";
 
 	public static void main(String[] args) throws IOException, InterruptedException, ParseException {
 		String clientID = "66GG";

@@ -12,7 +12,7 @@ import org.json.simple.JSONObject;
 public class PostRequest {
 
 	private static final HttpClient httpClient = HttpClient.newBuilder().version(HttpClient.Version.HTTP_2).build();
-	private final static String BASE_URL = "https://localhost:8443";
+	private final static String BASE_URL = "http://localhost:8440";
 
 	public static void main(String[] args) throws IOException, InterruptedException {
 		String[] allergiesID = { "1", "2", "3" };

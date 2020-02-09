@@ -11,11 +11,11 @@ import org.json.simple.JSONObject;
 public class PutRequest {
 
 	private static final HttpClient httpClient = HttpClient.newBuilder().version(HttpClient.Version.HTTP_2).build();
-	private final static String BASE_URL = "https://localhost:8443";
+	private final static String BASE_URL = "http://localhost:8440";
 
 	public static void main(String[] args) throws IOException, InterruptedException {
 		String allergiesID = "2";
-		String propietarios = "7777";
+		String propietarios = "412341585F";
 		String names = "555";
 		String descriptions = "descr actualizada";
 		String clientID = "66GG";

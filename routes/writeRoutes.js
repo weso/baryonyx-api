@@ -30,10 +30,10 @@ module.exports = function (app, gestorS, url) {
   app.put('/symmetry/allergy', function (req, res) {
     var contenido = {
       idcl: req.body.idcl, // ID paciente
-      idal: req.body.idal[0], // ID alergia
-      idpr: req.body.idpr[0], // ID propietario
-      name: req.body.name[0], // Nombre alergia
-      description: req.body.description[0] // Observaciones
+      idal: req.body.idal, // ID alergia
+      idpr: req.body.idpr, // ID propietario
+      name: req.body.name, // Nombre alergia
+      description: req.body.description // Observaciones
     }
 
     let path = url + contenido.idcl // Cambiar por NSS
