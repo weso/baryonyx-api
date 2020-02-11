@@ -1,10 +1,7 @@
 const express = require('express')
 const bodyParser = require('body-parser')
-const path = require('path')
-// solid-server
-const solid = require('solid-server')
+
 const Q = require('q')
-const N3 = require('n3')
 const auth = require('solid-auth-client')
 const newEngine = require('@comunica/actor-init-sparql-rdfjs').newEngine
 // solid file client
@@ -19,27 +16,17 @@ const app = express()
 
 app.use(bodyParser.json())
 
-const rdfjsSource = require('./modules/rdfjsSource.js')
-rdfjsSource.init(N3, Q)
-
 const gestorS = require('./modules/gestorSOLID.js')
-gestorS.init(app, Q, auth.fetch, newEngine, rdfjsSource, fileClient, namespaces)
+gestorS.init(app, Q, auth.fetch, newEngine, fileClient, namespaces)
 
-let url = 'https://localhost:8443/symmetry/'
-//let url = 'https://oth2.solid.community/symmetry/'
+//let url = 'https://localhost:8443/symmetry/'
+let url = 'https://oth2.solid.community/symmetry/'
 require('./routes/writeRoutes.js')(app, gestorS, url)
 require('./routes/deleteRoutes.js')(app, gestorS, url)
 require('./routes/readRoutes.js')(app, gestorS, namespaces, url)
-
-// running solid as express
-app.use('/', solid({
-  webid: true,
-  sslCert: path.resolve('keys/cert.pem'),
-  sslKey: path.resolve('keys/key.pem')
-}))
 
 app.listen(8440, function () {
   console.log('Starting server on port ' + 8440)
 })
 
-module.exports = app;
+module.exports = app

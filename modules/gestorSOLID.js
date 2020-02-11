@@ -3,14 +3,12 @@ module.exports = {
   Q: null,
   fetch: null,
   newEngine: null,
-  rdfjsSource: null,
   fileClient: null,
-  init: function (app, Q, fetch, newEngine, rdfjsSource, fileClient, namespaces) {
+  init: function (app, Q, fetch, newEngine, fileClient, namespaces) {
     this.app = app
     this.Q = Q
     this.fetch = fetch
     this.newEngine = newEngine
-    this.rdfjsSource = rdfjsSource
     this.fileClient = fileClient
     this.namespaces = namespaces
   },
@@ -21,39 +19,44 @@ module.exports = {
       await this.fileClient.createFile(path, '', 'text/turtle')
       return false
     }
-    const deferred = this.Q.defer()
-    const rdfjsSource = await this.rdfjsSource.fromUrl(path, this.fetch)
-    if (rdfjsSource) {
-      const engine = this.newEngine()
-      const objects = []
-      const promises = []
-      const self = this
-      engine.query(pred, {
-        sources: [{
-          type: 'rdfjsSource',
-          value: rdfjsSource
-        }]
-      })
-        .then(function (result) {
-          result.bindingsStream.on('data', async (data) => {
-            const deferred = self.Q.defer()
-            promises.push(deferred.promise)
-            data = data.toObject()
-            objects.push(data)
-            deferred.resolve()
-          })
+    let contenido = await this.fileClient.readFile(path)
+    let regexid = /:[0-9 ]+a schem:MedicalContraindication;/g
+    let regexdesc = /:description (.*?);/g
+    let regexpr = /:identifier (.*?);/g
+    let regexnm = /:name (.*?)[.]/g
+    let b = contenido.replace(/[@](.*?)[>][.]/g, '').replace(/\r?\n|\r|\t/g, '')
 
-          result.bindingsStream.on('end', function () {
-            self.Q.all(promises).then(() => {
-              deferred.resolve(objects)
-            })
-          })
-        })
-    } else {
-      deferred.resolve(null)
+    let id = []
+    let ds = []
+    let pr = []
+    let nm = []
+    b.replace(regexid, function (match) {
+      id.push(match.replace(/[:; ]+/g, '').split('a')[0])
+    })
+
+    b.replace(regexdesc, function (match) {
+      ds.push(match.replace(' <', ':').replace(/[>; ]+/g, '').split(':')[2].replace(/U0020/g, ' '))
+    })
+
+    b.replace(regexpr, function (match) {
+      pr.push(match.replace(' <', ':').replace(/[>; ]+/g, '').split(':')[2])
+    })
+
+    b.replace(regexnm, function (match) {
+      nm.push(match.replace(' <', ':').replace(/[>. ]+/g, '').split(':')[2].replace(/U0020/g, ' '))
+    })
+
+    let alergias = []
+    for (let i = 0; i < id.length; i++) {
+      let alergia = {
+        '?descripcion': { 'value': ds[i] },
+        '?id': { 'value': id[i] },
+        '?nombre': { 'value': nm[i] },
+        '?propietario': { 'value': pr[i] }
+      }
+      alergias.push(alergia)
     }
-
-    return deferred.promise
+    return alergias
   },
   existFolder: async function (folderName) {
     if ((await this.fileClient.itemExists(folderName))) {
@@ -142,10 +145,10 @@ module.exports = {
     let nombre, desc, prop
     let allergyFound = 0
     for (var j = 0; j < resp.length; j++) {
-      if (resp[j]['?id'].id.split('Alergias.ttl#')[1] === contenido.idal) {
-        nombre = resp[j]['?nombre'].value.split('/')[5]
-        desc = resp[j]['?descripcion'].value.split('/')[5]
-        prop = resp[j]['?propietario'].value.split('/')[5]
+      if (resp[j]['?id'].value === contenido.idal) {
+        nombre = resp[j]['?nombre'].value.split(' ').join('U0020')
+        desc = resp[j]['?descripcion'].value.split(' ').join('U0020')
+        prop = resp[j]['?propietario'].value
         allergyFound = 1
         break
       }
@@ -193,10 +196,10 @@ module.exports = {
     let nombre, desc, prop
     let allergyFound = 0
     for (var j = 0; j < resp.length; j++) {
-      if (resp[j]['?id'].id.split('Alergias.ttl#')[1] === contenido.idal) {
-        nombre = resp[j]['?nombre'].value.split('/')[5]
-        desc = resp[j]['?descripcion'].value.split('/')[5]
-        prop = resp[j]['?propietario'].value.split('/')[5]
+      if (resp[j]['?id'].value === contenido.idal) {
+        nombre = resp[j]['?nombre'].value.split(' ').join('U0020')
+        desc = resp[j]['?descripcion'].value.split(' ').join('U0020')
+        prop = resp[j]['?propietario'].value
         allergyFound = 1
         break
       }
