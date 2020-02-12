@@ -56,12 +56,6 @@ public class GetRequest {
 			nombre = (String) ((JSONObject) alergia.get("?nombre")).get("value");
 			descripcion = (String) ((JSONObject) alergia.get("?descripcion")).get("value");
 
-			// Extraemos los valores de las URIS
-			id = id.split("#")[1];
-			propietarioID = propietarioID.split("/")[5];
-			nombre = nombre.split("/")[5];
-			descripcion = descripcion.split("/")[5];
-
 			System.out.println(id);
 			System.out.println(propietarioID);
 			System.out.println(nombre);
