@@ -76,7 +76,7 @@ describe('Testing the API', () => {
         "idal": ["1", "2", "3"],
         "idpr": ["1738456", "34643636", "8673935"],
         "name": ["Alergia 1", "Alergia 2", "Alergia 3"],
-        "description": ["Va a morir", "A ver si funciona", "No puede respirar bien"]
+        "description": ["Va a morir", "Efectos variados: irritación, ceguera; náuseas.", "Problemas respiratorios de diversa índole: neumonía, bronquitis; paros cardorrespiratorios."]
       })
     expect(res.statusCode).toEqual(201)
     expect(res.body).toHaveProperty('message')
@@ -96,11 +96,11 @@ describe('Testing the API', () => {
     expect(res.body[0]['?id'].value).toContain('1')
     expect(res.body[0]['?nombre'].value).toContain('Alergia 1')
     expect(res.body[0]['?propietario'].value).toContain('1738456')
-    expect(res.body[1]['?descripcion'].value).toContain('A ver si funciona')
+    expect(res.body[1]['?descripcion'].value).toContain('Efectos variados: irritación, ceguera; náuseas.')
     expect(res.body[1]['?id'].value).toContain('2')
     expect(res.body[1]['?nombre'].value).toContain('Alergia 2')
     expect(res.body[1]['?propietario'].value).toContain('34643636')
-    expect(res.body[2]['?descripcion'].value).toContain('No puede respirar bien')
+    expect(res.body[2]['?descripcion'].value).toContain('Problemas respiratorios de diversa índole: neumonía, bronquitis; paros cardorrespiratorios.')
     expect(res.body[2]['?id'].value).toContain('3')
     expect(res.body[2]['?nombre'].value).toContain('Alergia 3')
     expect(res.body[2]['?propietario'].value).toContain('8673935')
@@ -116,7 +116,7 @@ describe('Testing the API', () => {
         "idal": "1",
         "idpr": "1738457",
         "name": "Alergia 1 CHANGED",
-        "description": "Causes multiple organ failure."
+        "description": "Causes multiple organ failure;"
       })
     expect(res.statusCode).toEqual(201)
     expect(res.body).toHaveProperty('message')
@@ -132,7 +132,7 @@ describe('Testing the API', () => {
         "idal": "7",
         "idpr": "35456474",
         "name": "Peniciline",
-        "description": "Severe irritation"
+        "description": "Severe irritation;"
       })
     expect(res.statusCode).toEqual(404)
     expect(res.body).toHaveProperty('error')
@@ -164,15 +164,15 @@ describe('Testing the API', () => {
     expect(res.body).not.toHaveProperty('error')
     const id = '456789'
     expect(res.type).toEqual('application/json')
-    expect(res.body[0]['?descripcion'].value).toContain('Causes multiple organ failure')
+    expect(res.body[0]['?descripcion'].value).toContain('Causes multiple organ failure;')
     expect(res.body[0]['?id'].value).toContain('1')
     expect(res.body[0]['?nombre'].value).toContain('Alergia 1 CHANGED')
     expect(res.body[0]['?propietario'].value).toContain('1738457')
-    expect(res.body[1]['?descripcion'].value).toContain('A ver si funciona')
+    expect(res.body[1]['?descripcion'].value).toContain('Efectos variados: irritación, ceguera; náuseas.')
     expect(res.body[1]['?id'].value).toContain('2')
     expect(res.body[1]['?nombre'].value).toContain('Alergia 2')
     expect(res.body[1]['?propietario'].value).toContain('34643636')
-    expect(res.body[2]['?descripcion'].value).toContain('No puede respirar bien')
+    expect(res.body[2]['?descripcion'].value).toContain("Problemas respiratorios de diversa índole: neumonía, bronquitis; paros cardorrespiratorios.")
     expect(res.body[2]['?id'].value).toContain('3')
     expect(res.body[2]['?nombre'].value).toContain('Alergia 3')
     expect(res.body[2]['?propietario'].value).toContain('8673935')
@@ -217,11 +217,11 @@ describe('Testing the API', () => {
     expect(res.body).not.toHaveProperty('error')
     const id = '456789'
     expect(res.type).toEqual('application/json')
-    expect(res.body[0]['?descripcion'].value).toContain('Causes multiple organ failure')
+    expect(res.body[0]['?descripcion'].value).toContain('Causes multiple organ failure;')
     expect(res.body[0]['?id'].value).toContain('1')
     expect(res.body[0]['?nombre'].value).toContain('Alergia 1 CHANGED')
     expect(res.body[0]['?propietario'].value).toContain('1738457')
-    expect(res.body[1]['?descripcion'].value).toContain('No puede respirar bien')
+    expect(res.body[1]['?descripcion'].value).toContain("Problemas respiratorios de diversa índole: neumonía, bronquitis; paros cardorrespiratorios.")
     expect(res.body[1]['?id'].value).toContain('3')
     expect(res.body[1]['?nombre'].value).toContain('Alergia 3')
     expect(res.body[1]['?propietario'].value).toContain('8673935')

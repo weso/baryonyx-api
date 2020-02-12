@@ -26,7 +26,7 @@ require('./routes/deleteRoutes.js')(app, gestorS, url)
 require('./routes/readRoutes.js')(app, gestorS, namespaces, url)
 
 app.listen(8440, function () {
-  console.log('Starting server on port ' + 8440)
+  console.log('Starting API on port ' + 8440)
 })
 
 module.exports = app
