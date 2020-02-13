@@ -19,14 +19,13 @@ app.use(bodyParser.json())
 const gestorS = require('./modules/gestorSOLID.js')
 gestorS.init(app, Q, auth.fetch, newEngine, fileClient, namespaces)
 
-//let url = 'https://localhost:8443/symmetry/'
-let url = 'https://oth2.solid.community/symmetry/'
+let url = 'https://localhost:8443/symmetry/'
 require('./routes/writeRoutes.js')(app, gestorS, url)
 require('./routes/deleteRoutes.js')(app, gestorS, url)
 require('./routes/readRoutes.js')(app, gestorS, namespaces, url)
 
 app.listen(8440, function () {
-  console.log('Starting server on port ' + 8440)
+  console.log('Starting API on port ' + 8440)
 })
 
 module.exports = app

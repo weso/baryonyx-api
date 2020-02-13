@@ -12,7 +12,7 @@ module.exports = {
     this.fileClient = fileClient
     this.namespaces = namespaces
   },
-  leer: async function (url, pred) {
+  leer: async function (url) {
     let path = url + '/Alergias.ttl'
     if (!(await this.existFolder(url))) {
       await this.fileClient.createFolder(url)
@@ -31,19 +31,32 @@ module.exports = {
     let pr = []
     let nm = []
     b.replace(regexid, function (match) {
-      id.push(match.replace(/[:; ]+/g, '').split('a')[0])
+      id.push(match.replace(/[:; ]+/g, '')
+        .split('a')[0])
     })
 
     b.replace(regexdesc, function (match) {
-      ds.push(match.replace(' <', ':').replace(/[>; ]+/g, '').split(':')[2].replace(/U0020/g, ' '))
+      ds.push(match.replace(' <', ':')
+        .replace(/[> ]*/g, '')
+        .split(':').slice(2).join(':')
+        .replace(/U0020/g, ' ')
+        .replace(/U003B/g, ';')
+        .slice(0, -1))
     })
 
     b.replace(regexpr, function (match) {
-      pr.push(match.replace(' <', ':').replace(/[>; ]+/g, '').split(':')[2])
+      pr.push(match.replace(' <', ':')
+        .replace(/[> ]*/g, '')
+        .split(':')[2]
+        .slice(0, -1))
     })
 
     b.replace(regexnm, function (match) {
-      nm.push(match.replace(' <', ':').replace(/[>. ]+/g, '').split(':')[2].replace(/U0020/g, ' '))
+      nm.push(match.replace(' <', ':')
+        .replace(/[> ]*/g, '')
+        .split(':').slice(2).join(':')
+        .replace(/U0020/g, ' ')
+        .slice(0, -1))
     })
 
     let alergias = []
@@ -79,7 +92,7 @@ module.exports = {
 
     for (let i = 0; i < contenido.name.length; i++) {
       // allergies and description without spaces
-      let descriptionNoSpace = contenido.description[i].split(' ').join('U0020')
+      let descriptionNoSpace = contenido.description[i].split(' ').join('U0020').split(';').join('U003B')
       let nameNoSpace = contenido.name[i].split(' ').join('U0020')
       // content to be inserted in the pod
       predicado += '\n<#' + contenido.idal[i] + '> a <' + this.namespaces.schema + 'MedicalContraindication>;' +
@@ -135,19 +148,14 @@ module.exports = {
       return false
     }
 
-    let predicadobusq = 'SELECT * { ?id a <' + this.namespaces.schema + 'MedicalContraindication>;' +
-      '<' + this.namespaces.schema + 'description> ?descripcion;' +
-      '<' + this.namespaces.schema + 'identifier> ?propietario;' +
-      '<' + this.namespaces.schema + 'name> ?nombre. }'
-
     // create allergy file
-    let resp = await this.leer(url, predicadobusq)
+    let resp = await this.leer(url)
     let nombre, desc, prop
     let allergyFound = 0
     for (var j = 0; j < resp.length; j++) {
       if (resp[j]['?id'].value === contenido.idal) {
         nombre = resp[j]['?nombre'].value.split(' ').join('U0020')
-        desc = resp[j]['?descripcion'].value.split(' ').join('U0020')
+        desc = resp[j]['?descripcion'].value.split(' ').join('U0020').split(';').join('U003B')
         prop = resp[j]['?propietario'].value
         allergyFound = 1
         break
@@ -165,7 +173,7 @@ module.exports = {
       // allergies and description without spaces
       let descr = contenido.description + ''
       nombre = contenido.name + ''
-      let descriptionNoSpace = descr.split(' ').join('U0020')
+      let descriptionNoSpace = descr.split(' ').join('U0020').split(';').join('U003B')
       let nameNoSpace = nombre.split(' ').join('U0020')
       // content to be inserted in the pod
       let predicadoins = '\n<#' + contenido.idal + '> a <' + this.namespaces.schema + 'MedicalContraindication>;' +
@@ -186,19 +194,14 @@ module.exports = {
       return false
     }
 
-    let predicado = 'SELECT * { ?id a <' + this.namespaces.schema + 'MedicalContraindication>;' +
-      '<' + this.namespaces.schema + 'description> ?descripcion;' +
-      '<' + this.namespaces.schema + 'identifier> ?propietario;' +
-      '<' + this.namespaces.schema + 'name> ?nombre. }'
-
     // create allergy file
-    let resp = await this.leer(url, predicado)
+    let resp = await this.leer(url)
     let nombre, desc, prop
     let allergyFound = 0
     for (var j = 0; j < resp.length; j++) {
       if (resp[j]['?id'].value === contenido.idal) {
         nombre = resp[j]['?nombre'].value.split(' ').join('U0020')
-        desc = resp[j]['?descripcion'].value.split(' ').join('U0020')
+        desc = resp[j]['?descripcion'].value.split(' ').join('U0020').split(';').join('U003B')
         prop = resp[j]['?propietario'].value
         allergyFound = 1
         break
