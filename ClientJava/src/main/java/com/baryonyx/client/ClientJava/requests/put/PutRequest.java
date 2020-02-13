@@ -1,17 +1,16 @@
 package com.baryonyx.client.ClientJava.requests.put;
 
 import java.io.IOException;
-import java.net.URI;
-import java.net.http.HttpClient;
-import java.net.http.HttpRequest;
-import java.net.http.HttpResponse;
 
+import org.apache.http.HttpResponse;
+import org.apache.http.client.fluent.Request;
+import org.apache.http.entity.ContentType;
+import org.apache.http.util.EntityUtils;
 import org.json.simple.JSONObject;
 
 public class PutRequest {
 
-	private static final HttpClient httpClient = HttpClient.newBuilder().version(HttpClient.Version.HTTP_2).build();
-	private final static String BASE_URL = "http://localhost:8440";
+	private final static String BASE_URL = "http://192.168.99.100:8440";
 
 	public static void main(String[] args) throws IOException, InterruptedException {
 		String allergiesID = "2";
@@ -44,18 +43,12 @@ public class PutRequest {
 		json.put("name", allergyName);
 		json.put("description", allergyDescription);
 
-		// add json header
-		HttpRequest request = HttpRequest.newBuilder().PUT(HttpRequest.BodyPublishers.ofString(json.toJSONString()))
-				.uri(URI.create(BASE_URL + "/symmetry/allergy"))
-				.setHeader("User-Agent", "PUT update Allergy for user from API") // header
-				.header("Content-Type", "application/json").build();
+		// put body
+		HttpResponse response = Request.Put(BASE_URL + "/symmetry/allergy")
+				.bodyString(json.toJSONString(), ContentType.APPLICATION_JSON).execute().returnResponse();
 
-		HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+		System.out.println(response.getStatusLine().getStatusCode());
+		System.out.println(EntityUtils.toString(response.getEntity(), "UTF-8"));
 
-		// print status code
-		System.out.println(response.statusCode());
-
-		// print response body
-		System.out.println(response.body());
 	}
 }

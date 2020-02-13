@@ -44,7 +44,7 @@ public class PostRequest {
 		appendJSONArray(json, "name", allergiesName);
 		appendJSONArray(json, "description", allergiesDescription);
 
-		// add json header
+		// post body
 		HttpResponse response = Request.Post(BASE_URL + "/symmetry/allergy")
 				.bodyString(json.toJSONString(), ContentType.APPLICATION_JSON).execute().returnResponse();
 
