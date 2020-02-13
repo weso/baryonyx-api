@@ -1,14 +1,10 @@
 package com.baryonyx.client.ClientJava.requests.get;
 
 import java.io.IOException;
-import java.net.URI;
-import java.net.http.HttpClient;
-import java.net.http.HttpHeaders;
-import java.net.http.HttpRequest;
-import java.net.http.HttpResponse;
-import java.util.List;
-import java.util.function.BiConsumer;
 
+import org.apache.http.HttpResponse;
+import org.apache.http.client.fluent.Request;
+import org.apache.http.util.EntityUtils;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -16,8 +12,7 @@ import org.json.simple.parser.ParseException;
 
 public class GetRequest {
 
-	private final static HttpClient httpClient = HttpClient.newBuilder().version(HttpClient.Version.HTTP_2).build();
-	private final static String BASE_URL = "http://localhost:8440";
+	private final static String BASE_URL = "http://192.168.99.100:8440";
 
 	public static void main(String[] args) throws IOException, InterruptedException, ParseException {
 		String clientID = "66GG";
@@ -25,26 +20,14 @@ public class GetRequest {
 	}
 
 	public static void sendGET(String userID) throws IOException, InterruptedException, ParseException {
-		HttpRequest request = HttpRequest.newBuilder().GET().uri(URI.create(BASE_URL + "/symmetry/allergy/" + userID))
-				.setHeader("User-Agent", "Get Allergies for a user from API") // add request header
-				.build();
-
-		HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
-		// print response headers
-		HttpHeaders headers = response.headers();
-		headers.map().forEach(new BiConsumer<String, List<String>>() {
-			public void accept(String k, List<String> v) {
-				System.out.println(k + ":" + v);
-			}
-		});
-
-		// print status code
-		System.out.println(response.statusCode());
+		HttpResponse response = Request.Get(BASE_URL + "/symmetry/allergy/" + userID).execute().returnResponse();
+		System.out.println(response.getStatusLine().getStatusCode());
+		String body = EntityUtils.toString(response.getEntity(), "UTF-8");
+		//System.out.println(body);
 
 		JSONParser parser = new JSONParser();
 		JSONArray json = null;
-		json = (JSONArray) parser.parse(response.body());
-
+		json = (JSONArray) parser.parse(body);
 		for (int i = 0; i < json.size(); i++) {
 			String id, propietarioID, nombre, descripcion;
 
