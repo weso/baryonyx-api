@@ -12,10 +12,10 @@ import org.json.simple.parser.ParseException;
 
 public class GetRequest {
 
-	private final static String BASE_URL = "http://192.168.99.100:8440";
+	private final static String BASE_URL = "http://192.168.99.101:8440";
 
 	public static void main(String[] args) throws IOException, InterruptedException, ParseException {
-		String clientID = "66GG";
+		String clientID = "6666";
 		sendGET(clientID);
 	}
 

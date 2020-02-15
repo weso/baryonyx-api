@@ -12,7 +12,7 @@ module.exports = {
     this.fileClient = fileClient
     this.namespaces = namespaces
   },
-  leer: async function (url) {
+  leer: async function (url, alid) {
     let path = url + '/Alergias.ttl'
     if (!(await this.existFolder(url))) {
       await this.fileClient.createFolder(url)
@@ -20,7 +20,12 @@ module.exports = {
       return false
     }
     let contenido = await this.fileClient.readFile(path)
-    let regexid = /:[0-9 ]+a schem:MedicalContraindication;/g
+    let regexid
+    if (alid) {
+      regexid = new RegExp(':' + alid + '[ ]+a schem:MedicalContraindication;', 'g')
+    } else {
+      regexid = /:[0-9 ]+a schem:MedicalContraindication;/g
+    }
     let regexdesc = /:description (.*?);/g
     let regexpr = /:identifier (.*?);/g
     let regexnm = /:name (.*?)[.]/g
@@ -79,29 +84,31 @@ module.exports = {
     }
   },
   writeInFolder: async function (url, contenido) {
-    let path = url + '/Alergias.ttl'
+
     let userfound = true
-    // create id folder if it does not exist
-    if (!(await this.existFolder(url))) {
-      await this.fileClient.createFolder(url)
-      await this.fileClient.createFile(path, '', 'text/turtle')
-      userfound = false
-    }
 
     let predicado = ''
 
-    for (let i = 0; i < contenido.name.length; i++) {
+    for (let i = 0; i < contenido.idcl.length; i++) {
+      let path = url + contenido.idcl[i] + '/Alergias.ttl'
+      // create id folder if it does not exist
+      if (!(await this.existFolder(url))) {
+        await this.fileClient.createFolder(url)
+        await this.fileClient.createFile(path, '', 'text/turtle')
+        userfound = false
+      }
       // allergies and description without spaces
       let descriptionNoSpace = contenido.description[i].split(' ').join('U0020').split(';').join('U003B')
       let nameNoSpace = contenido.name[i].split(' ').join('U0020')
       // content to be inserted in the pod
-      predicado += '\n<#' + contenido.idal[i] + '> a <' + this.namespaces.schema + 'MedicalContraindication>;' +
+      predicado = '\n<#' + contenido.idal[i] + '> a <' + this.namespaces.schema + 'MedicalContraindication>;' +
         '<' + this.namespaces.schema + 'description> <' + descriptionNoSpace + '>;' +
         '<' + this.namespaces.schema + 'identifier> <' + contenido.idpr[i] + '>;' +
         '<' + this.namespaces.schema + 'name> <' + nameNoSpace + '>.'
+
+      await this.executeSPARQLUpdate(path, 'INSERT DATA {' + predicado + '}')
     }
 
-    await this.executeSPARQLUpdate(path, 'INSERT DATA {' + predicado + '}')
     return userfound
   },
   executeSPARQLUpdate: function (url, query) {

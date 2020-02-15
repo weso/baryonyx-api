@@ -1,6 +1,5 @@
 const request = require('supertest')
 const app = require('../app')
-const url = 'https://oth2.solid.community/symmetry/456789/'
 jest.useFakeTimers()
 jest.setTimeout(30000)
 
@@ -10,7 +9,7 @@ describe('Testing the API', () => {
     const res = await request(app)
       .post('/symmetry/allergy')
       .send({
-        "idcl": "456789",
+        "idcl": ["456789"],
         "idal": ["1"],
         "idpr": ["1738456"],
         "name": ["Alergia 1"],
@@ -18,16 +17,15 @@ describe('Testing the API', () => {
       })
     expect(res.statusCode).toEqual(201)
     expect(res.body).toHaveProperty('message')
-    expect(res.body.message).toEqual('No user was found with ID 456789. Therefore, a folder was created for him. The allergy or allergies were successfully inserted.')
+    expect(res.body.message).toEqual('The allergy or allergies were successfully inserted on user 456789\'s folder.')
     done()
   })
 
   it('Reading the allergy inserted : GET', async (done) => {
     const res = await request(app)
-      .get('/symmetry/allergy/456789')
+      .get('/symmetry/allergy/patient/456789')
     expect(res.statusCode).toEqual(200)
     expect(res.body).not.toHaveProperty('error')
-    const id = '456789'
     expect(res.type).toEqual('application/json')
     expect(res.body[0]['?descripcion'].value).toContain('Va a morir')
     expect(res.body[0]['?id'].value).toContain('1')
@@ -57,7 +55,7 @@ describe('Testing the API', () => {
   // empty allergies for a non existing user
   it('Empty allergies for a non existing user : GET', async (done) => {
     const res = await request(app)
-      .get('/symmetry/allergy/456789')
+      .get('/symmetry/allergy/patient/456789')
 
     expect(res.statusCode).toEqual(404)
     //empty file
@@ -72,7 +70,7 @@ describe('Testing the API', () => {
     const res = await request(app)
       .post('/symmetry/allergy')
       .send({
-        "idcl": "456789",
+        "idcl": ["456789", "456789", "123456"],
         "idal": ["1", "2", "3"],
         "idpr": ["1738456", "34643636", "8673935"],
         "name": ["Alergia 1", "Alergia 2", "Alergia 3"],
@@ -80,14 +78,14 @@ describe('Testing the API', () => {
       })
     expect(res.statusCode).toEqual(201)
     expect(res.body).toHaveProperty('message')
-    expect(res.body.message).toEqual('The allergy or allergies were successfully inserted on user 456789\'s folder.')
+    expect(res.body.message).toEqual('The allergy or allergies were successfully inserted on user 456789,456789,123456\'s folder.')
     done()
   })
 
   // make sure the data is correct -- GET
-  it('Reading the allegies inserted : GET', async (done) => {
+  it('Reading the allergies inserted in 456789: GET', async (done) => {
     const res = await request(app)
-      .get('/symmetry/allergy/456789')
+      .get('/symmetry/allergy/patient/456789')
     expect(res.statusCode).toEqual(200)
     expect(res.body).not.toHaveProperty('error')
     const id = '456789'
@@ -100,10 +98,20 @@ describe('Testing the API', () => {
     expect(res.body[1]['?id'].value).toContain('2')
     expect(res.body[1]['?nombre'].value).toContain('Alergia 2')
     expect(res.body[1]['?propietario'].value).toContain('34643636')
-    expect(res.body[2]['?descripcion'].value).toContain('Problemas respiratorios de diversa índole: neumonía, bronquitis; paros cardorrespiratorios.')
-    expect(res.body[2]['?id'].value).toContain('3')
-    expect(res.body[2]['?nombre'].value).toContain('Alergia 3')
-    expect(res.body[2]['?propietario'].value).toContain('8673935')
+    done()
+  })
+
+  it('Reading the allergies inserted in 123456: GET', async (done) => {
+    const res = await request(app)
+      .get('/symmetry/allergy/patient/123456')
+    expect(res.statusCode).toEqual(200)
+    expect(res.body).not.toHaveProperty('error')
+    const id = '456789'
+    expect(res.type).toEqual('application/json')
+    expect(res.body[0]['?descripcion'].value).toContain('Problemas respiratorios de diversa índole: neumonía, bronquitis; paros cardorrespiratorios.')
+    expect(res.body[0]['?id'].value).toContain('3')
+    expect(res.body[0]['?nombre'].value).toContain('Alergia 3')
+    expect(res.body[0]['?propietario'].value).toContain('8673935')
     done()
   })
 
@@ -144,7 +152,7 @@ describe('Testing the API', () => {
     const res = await request(app)
       .put('/symmetry/allergy')
       .send({
-        "idcl": "123456",
+        "idcl": "1254754",
         "idal": "7",
         "idpr": "35456474",
         "name": "Peniciline",
@@ -152,14 +160,14 @@ describe('Testing the API', () => {
       })
     expect(res.statusCode).toEqual(404)
     expect(res.body).toHaveProperty('error')
-    expect(res.body.error).toEqual('No user was found with ID 123456 or allergy with ID 7 could not be found.')
+    expect(res.body.error).toEqual('No user was found with ID 1254754 or allergy with ID 7 could not be found.')
     done()
   })
 
   // make sure the data is updated -- GET
   it('Reading the allergies updated : GET', async (done) => {
     const res = await request(app)
-      .get('/symmetry/allergy/456789')
+      .get('/symmetry/allergy/patient/456789')
     expect(res.statusCode).toEqual(200)
     expect(res.body).not.toHaveProperty('error')
     const id = '456789'
@@ -172,10 +180,6 @@ describe('Testing the API', () => {
     expect(res.body[1]['?id'].value).toContain('2')
     expect(res.body[1]['?nombre'].value).toContain('Alergia 2')
     expect(res.body[1]['?propietario'].value).toContain('34643636')
-    expect(res.body[2]['?descripcion'].value).toContain("Problemas respiratorios de diversa índole: neumonía, bronquitis; paros cardorrespiratorios.")
-    expect(res.body[2]['?id'].value).toContain('3')
-    expect(res.body[2]['?nombre'].value).toContain('Alergia 3')
-    expect(res.body[2]['?propietario'].value).toContain('8673935')
     done()
   })
 
@@ -210,21 +214,30 @@ describe('Testing the API', () => {
     done()
   })
 
-  it('Reading the allergies after deletion : GET', async (done) => {
+  it('Reading the allergies in 456789 after deletion : GET', async (done) => {
     const res = await request(app)
-      .get('/symmetry/allergy/456789')
+      .get('/symmetry/allergy/patient/456789')
     expect(res.statusCode).toEqual(200)
     expect(res.body).not.toHaveProperty('error')
-    const id = '456789'
     expect(res.type).toEqual('application/json')
     expect(res.body[0]['?descripcion'].value).toContain('Causes multiple organ failure;')
     expect(res.body[0]['?id'].value).toContain('1')
     expect(res.body[0]['?nombre'].value).toContain('Alergia 1 CHANGED')
     expect(res.body[0]['?propietario'].value).toContain('1738457')
-    expect(res.body[1]['?descripcion'].value).toContain("Problemas respiratorios de diversa índole: neumonía, bronquitis; paros cardorrespiratorios.")
-    expect(res.body[1]['?id'].value).toContain('3')
-    expect(res.body[1]['?nombre'].value).toContain('Alergia 3')
-    expect(res.body[1]['?propietario'].value).toContain('8673935')
+    done()
+  })
+
+  it('Reading the allegies in 123456 after deletion: GET', async (done) => {
+    const res = await request(app)
+      .get('/symmetry/allergy/patient/123456')
+    expect(res.statusCode).toEqual(200)
+    expect(res.body).not.toHaveProperty('error')
+    const id = '456789'
+    expect(res.type).toEqual('application/json')
+    expect(res.body[0]['?descripcion'].value).toContain('Problemas respiratorios de diversa índole: neumonía, bronquitis; paros cardorrespiratorios.')
+    expect(res.body[0]['?id'].value).toContain('3')
+    expect(res.body[0]['?nombre'].value).toContain('Alergia 3')
+    expect(res.body[0]['?propietario'].value).toContain('8673935')
     done()
   })
 

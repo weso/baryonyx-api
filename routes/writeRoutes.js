@@ -8,9 +8,7 @@ module.exports = function (app, gestorS, url) {
       description: req.body.description // Observaciones
     }
 
-    let path = url + req.body.idcl // Cambiar por NSS
-
-    gestorS.writeInFolder(path, contenido).then(result => {
+    gestorS.writeInFolder(url, contenido).then(result => {
       if (result) {
         res.status(201).json({
           message: 'The allergy or allergies were successfully inserted on user ' + contenido.idcl + '\'s folder.'
