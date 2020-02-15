@@ -69,9 +69,6 @@ module.exports = {
         '?paciente': { 'value': url.split('/')[4] },
         '?propietario': { 'value': pr[i] }
       }
-      console.log(id)
-      console.log(alid)
-      console.log(id[i])
       if (!alid || alid === id[i])
         alergias.push(alergia)
     }

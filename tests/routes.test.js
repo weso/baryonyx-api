@@ -154,10 +154,8 @@ describe('Testing the API', () => {
   })
 
   it('Reading the allergy 2 : GET', async (done) => {
-    console.log("EEEEE")
     const res = await request(app)
       .get('/symmetry/allergy/2')
-    console.log("EEEEE")
     expect(res.statusCode).toEqual(200)
     expect(res.body).not.toHaveProperty('error')
     expect(res.type).toEqual('application/json')
