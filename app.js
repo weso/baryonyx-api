@@ -19,7 +19,7 @@ app.use(bodyParser.json())
 const gestorS = require('./modules/gestorSOLID.js')
 gestorS.init(app, Q, auth.fetch, newEngine, fileClient, namespaces)
 
-let url = 'https://oth2.solid.community/symmetry/'
+let url = 'https://localhost:8440/symmetry/'
 require('./routes/writeRoutes.js')(app, gestorS, url)
 require('./routes/deleteRoutes.js')(app, gestorS, url)
 require('./routes/readRoutes.js')(app, gestorS, namespaces, url, fileClient)
