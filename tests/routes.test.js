@@ -139,6 +139,36 @@ describe('Testing the API', () => {
     done()
   })
 
+  it('Reading the allergy 1 : GET', async (done) => {
+    const res = await request(app)
+      .get('/symmetry/allergy/1')
+    expect(res.statusCode).toEqual(200)
+    expect(res.body).not.toHaveProperty('error')
+    expect(res.type).toEqual('application/json')
+    expect(res.body[0]['?descripcion'].value).toContain('Va a morir')
+    expect(res.body[0]['?id'].value).toContain('1')
+    expect(res.body[0]['?nombre'].value).toContain('Alergia 1')
+    expect(res.body[0]['?propietario'].value).toContain('1738456')
+    expect(res.body.length).toEqual(1)
+    done()
+  })
+
+  it('Reading the allergy 2 : GET', async (done) => {
+    console.log("EEEEE")
+    const res = await request(app)
+      .get('/symmetry/allergy/2')
+    console.log("EEEEE")
+    expect(res.statusCode).toEqual(200)
+    expect(res.body).not.toHaveProperty('error')
+    expect(res.type).toEqual('application/json')
+    expect(res.body[0]['?descripcion'].value).toContain('Efectos variados: irritación, ceguera; náuseas.')
+    expect(res.body[0]['?id'].value).toContain('2')
+    expect(res.body[0]['?nombre'].value).toContain('Alergia 2')
+    expect(res.body[0]['?propietario'].value).toContain('34643636')
+    expect(res.body.length).toEqual(1)
+    done()
+  })
+
   it('Reading the allergy 3 : GET', async (done) => {
     const res = await request(app)
       .get('/symmetry/allergy/3')

@@ -20,12 +20,8 @@ module.exports = {
       return false
     }
     let contenido = await this.fileClient.readFile(path)
-    let regexid
-    if (alid) {
-      regexid = new RegExp(':' + alid + '[ ]+a schem:MedicalContraindication;', 'g')
-    } else {
-      regexid = /:[0-9 ]+a schem:MedicalContraindication;/g
-    }
+
+    let regexid = /:[0-9 ]+a schem:MedicalContraindication;/g
     let regexdesc = /:description (.*?);/g
     let regexpr = /:identifier (.*?);/g
     let regexnm = /:name (.*?)[.]/g
@@ -70,10 +66,14 @@ module.exports = {
         '?descripcion': { 'value': ds[i] },
         '?id': { 'value': id[i] },
         '?nombre': { 'value': nm[i] },
-		'?paciente': { 'value': url.split('/')[4] },
+        '?paciente': { 'value': url.split('/')[4] },
         '?propietario': { 'value': pr[i] }
       }
-      alergias.push(alergia)
+      console.log(id)
+      console.log(alid)
+      console.log(id[i])
+      if (!alid || alid === id[i])
+        alergias.push(alergia)
     }
     return alergias
   },
