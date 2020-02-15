@@ -70,6 +70,7 @@ module.exports = {
         '?descripcion': { 'value': ds[i] },
         '?id': { 'value': id[i] },
         '?nombre': { 'value': nm[i] },
+		'?paciente': { 'value': url.split('/')[4] },
         '?propietario': { 'value': pr[i] }
       }
       alergias.push(alergia)
