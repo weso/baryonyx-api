@@ -1,13 +1,18 @@
 {
-  "name": "baryonyx-api",
+  "name": "baryonyx-api-for-Izertis",
   "version": "0.0.1",
   "description": "Decentralized, solid-based api for reading and writing in a user's solid POD",
+  "license": "BSD-3-Clause",
   "main": "app.js",
   "presets": [
     "@babel/preset-es2016"
   ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/weso/baryonyx-api"
+  },
   "scripts": {
-    "app": "node app.js",
+    "app": "node server.js",
     "test": "jest --force-exit",
     "coverage": "nyc report --reporter=text-lcov > coverage.lcov",
     "coveralls": "nyc report --reporter=text-lcov | coveralls",
@@ -21,16 +26,11 @@
     ]
   },
   "bin": {},
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/weso/baryonyx-api"
-  },
   "author": "WESO",
   "contributors": [
     "Othmane Bakhtaoui <uo259323@uniovi.es> (https://github.com/othub)",
     "Jorge Fidalgo <UO258524@uniovi.es> (https://github.com/jorgealvarezfidalgo)"
   ],
-  "license": "BSD-3-Clause",
   "bugs": {
     "url": "https://github.com/weso/baryonyx-api/issues"
   },
@@ -75,7 +75,14 @@
     "supertest": "^4.0.2",
     "walk": "^2.3.14",
     "webpack": "^4.23.1",
-    "webpack-cli": "^3.1.2"
+    "webpack-cli": "^3.1.2",
+    "@log4js-node/gelf": "^1.0.2",
+    "compression": "^1.7.4",
+    "dotenv": "^8.0.0",
+    "helmet": "^3.18.0",
+    "log4js": "^4.4.0",
+    "mongoose": "^5.6.3",
+    "morgan": "^1.9.1"
   },
   "dependencies": {
     "@comunica/actor-init-sparql-rdfjs": "1.4.2",
@@ -103,6 +110,12 @@
     "streamify-array": "^1.0.1",
     "uniqid": "^5.0.3",
     "uri-js": "^4.2.2",
-    "winston": "^3.1.0"
+    "winston": "^3.1.0",
+    "eslint": "^6.0.1",
+    "eslint-config-standard": "^12.0.0",
+    "eslint-plugin-import": "^2.18.0",
+    "eslint-plugin-node": "^9.1.0",
+    "eslint-plugin-promise": "^4.2.1",
+    "eslint-plugin-standard": "^4.0.0"
   }
 }
