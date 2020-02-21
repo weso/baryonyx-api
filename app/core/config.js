@@ -15,13 +15,6 @@ module.exports = {
         return process.env.NODE_ENV === 'production';
     },
     port: getEnvironmentValue(process.env.SERVER_PORT, 8440),
-    mongo: {
-        uri: getEnvironmentValue(process.env.MONGO_URI, 'mongodb://localhost:27017/app'),
-        options: {
-            user: getEnvironmentValue(process.env.MONGO_USER, ''),
-            pass: getEnvironmentValue(process.env.MONGO_PASS, '')
-        }
-    },
     log: {
         level: getEnvironmentValue(process.env.LOG_LEVEL, 'info'),
         graylog: {
